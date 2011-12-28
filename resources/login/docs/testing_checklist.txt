@@ -1,0 +1,22 @@
+Make sure cracklib works in strict mode.
+Make sure cracklib fails in strict mode with bad binary.
+Make sure cracklib works in non-strict mode.
+Make sure cracklib doesn't fail in non-strict mode with bad binary.
+Make sure $model->cleanFailedLogins works.
+Make sure authenticating a user works.
+	Try bad username
+	Try bad password
+Make sure authentication backoff works.
+Make sure changing password works.
+	Try bad password
+Make sure admin changing password works.
+Make sure generate password reset token works.
+	Try bad username
+Make sure generate password reset token backoff works.
+Make sure admin generate password reset token works.
+Make sure admin generate password reset token backoff works.
+Make sure use password reset token works.
+	Try bad token
+	Try expired token
+Make sure register works.
+	Try existing username

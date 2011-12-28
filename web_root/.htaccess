@@ -1,0 +1,2 @@
+php_value include_path "/var/www/callme/resources:/usr/share/php:."
+php_value auto_prepend_file "ewl/prepend.php"
