@@ -21,20 +21,41 @@ $tabArray =  array();
 $tabArray[99] = '<a href="#" class="active">Logged as: ' . $_SESSION["username"] . '</a>';
 $_PageTabs = decoratePageTabs($tabArray, 99);
 
-
+$root = (isset($_GET['root'])) ? htmlentities($_GET['root']) : '/';
 $WSRest = new PestXML(JS_WS_URL);
 // Set auth Header
 $WSRest->curl_opts[CURLOPT_COOKIE] = $_SESSION["JSCookie"] ;
 
+
+foreach (explode('/', $root) as $key => $items) {
+	$tempArray[] = $items;
+	if ($item == '' and $key == 0) {
+		$currentPathArray[] = '<a href="home.php">Repository</a>';
+	} else {
+		$currentPathArray[] = '<a href="home.php?root=' . implode("/", $tempArray) . '">' . ucfirst($items) . '</a>';
+	}
+}
+$currentPath = implode(" &raquo; ", $currentPathArray);
+
 try 
 {		    
-	$resources = $WSRest->get('resources/reports');
+	$resources = $WSRest->get('resources' . $root);
 	//$response = $pest->post('login', $restData);
 	
 	//$screen .= "\n" . print_r($WSRest->last_response, true);
 	$screen = '<ul>';
 	foreach ($resources->resourceDescriptor as $contents) {
-	    $screen .= '<li>' . $contents->label .'</li>';
+		switch ($contents['wsType']) {
+			case 'folder':
+				$screen .= '<li> <img src="'. WWW_ROOT .'images/icon-folder.png" align="absmiddle" ><a href="home.php?root=' . $contents['uriString'] . '">' . $contents->label . '</a></li>';
+			break;
+			case 'reportUnit';
+				$screen .= '<li> <img src="'. WWW_ROOT .'images/icon-edit.gif" align="absmiddle" ><a href="viewReport.php?uri=' . $contents['uriString'] . '">' . $contents->label . '</a></li>';
+			break;
+			default:
+				$screen .= '<li>' . $contents->label . ' (' . $contents['wsType'] . ')</li>';
+		}
+	    
 	}
 	$screen .= '</ul>';
 } 
@@ -43,7 +64,7 @@ catch (Exception $e)
     $screen .=  "Exception: <pre>" .  $e->getMessage() . "</pre>";
 }
 
-$screen .= htmlentities(print_r($resources, true));
+//$screen .= htmlentities(print_r($resources, true));
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
@@ -88,10 +109,10 @@ $screen .= htmlentities(print_r($resources, true));
 			<ul class="tabs">
 			<?php echo $_PageTabs; ?>
 			</ul> 
-    	<h3>Welcome to the JasperServer sample (PHP version)</h3>
-    	<pre>
-<?php echo $screen; ?>
-   </pre>
+    		<h3>Welcome to the JasperServer Repository (PHP Rest Web Services)</h3>
+			<h5><?php echo $currentPath; ?></h5>
+			<?php echo $screen; ?>
+   
 		</div>
 		<div id="footer" class="span-16"> 
 			<!-- Footer Links -->

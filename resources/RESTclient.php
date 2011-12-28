@@ -9,7 +9,6 @@
 
 	$namespace = "http://www.jaspersoft.com/namespaces/php";
 
-	require_once('SOAP/Client.php');
 
 	define("TYPE_FOLDER","folder");
 	define("TYPE_REPORTUNIT","reportUnit");
