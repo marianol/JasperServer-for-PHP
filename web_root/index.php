@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2011
  */
 
-require(config.php);
+require_once('config.php');
 
 if($_SESSION['userlevel'] >= USER) {
 	// You are already Logged in!!

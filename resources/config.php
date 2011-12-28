@@ -8,7 +8,7 @@
 session_start();
 /* Get Required Libraries */
 require_once 'RESTclient.php';
-
+require_once 'functions.php';
 /**
  * Site Constants
  *
@@ -27,7 +27,7 @@ define('ADMIN', 5); // for administrators.
 /**
  * HTTP path to www/ directory.
  */
-define('WWW_ROOT', '/'); // 
+define('WWW_ROOT', '/myphpapp/'); // 
 define('SITE_PATH', '/Library/WebServer/Documents/JSDemo/');
 
 define('SSL_FORCED', false);
@@ -43,6 +43,8 @@ if(SSL_FORCED && $_SERVER['SERVER_PORT'] != 443) {
 /**
  * Main Site Configuration Array
  */
+$_PageTitle = ''; // Default Page title
+$_PageTabs = ''; // Default Tabs
 
 $_SiteConfig = array();
 
@@ -71,6 +73,16 @@ $_SiteConfig['site'] = array(
 	'company' 		=> 'App Company',
 );
 
+$_SiteConfig['user_menu']  = '
+	<li ><a href="home.php">Home</a></li>
+	<li ><a href="iframe.php">iFrame Integration</a></li> 
+	<li ><a href="about.php">About</a></li> 
+	<li ><a href="logout.php">Log out</a></li> 
+';
+$_SiteConfig['guest_menu']  = '
+	<li ><a href="login.php">Login</a></li>
+	<li ><a href="about.php">About</a></li> 
+';
 $_SiteConfig['notifyemails'] = array(
 	'Administrator'			=> 'admin@nomail.com',
 );
