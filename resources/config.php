@@ -1,16 +1,13 @@
 <?php
 /**
- * ETSZONE Call Me (ECM) configuration file.
+ * My App configuration file.
  *
- * @copyright Copyright (c) 2011, Essential Technology Solutions, LLC
+ * @copyright Copyright (c) 2008
  */
 
-/* Make sure prepend.php called us */
-assert(defined('EWL_PREPENDED'));
-
+session_start();
 /* Get Required Libraries */
-require_once 'ecm_general.php';
-require_once 'template_functions.php';
+require_once 'RESTclient.php';
 
 /**
  * Site Constants
@@ -18,19 +15,6 @@ require_once 'template_functions.php';
  */
 define('TEMPLATE_PATH', INCLUDE_PATH . 'templates/'); // Templates location
 define('TABLE_PREFIX', 'ecm_'); 
-
-/**
- *  Relative path to redirect Guest user when 
- *  trying to access something outside its scope
- *
- */
-define('GUEST_REDIRECT', '/index.php');
-/**
- *  Relative path to redirect logged users when 
- *  trying to access something outside its scope
- *
- */
-define('USER_REDIRECT', '/public/no-access.php');
 
 /**
  * Access level constants
@@ -41,19 +25,10 @@ define('ADMIN', 5); // for administrators.
 
 
 /**
- * Accessible directories.
- */
-$GLOBALS['ACCESS_DIRS'] = array('ROOT'   => GUEST, // Root dir
-								'public' => GUEST,
-                                'user'    => USER,
-                                'admin'   => ADMIN,
-								);
-
-/**
  * HTTP path to www/ directory.
  */
 define('WWW_ROOT', '/'); // 
-define('SITE_PATH', '/var/www/callme');
+define('SITE_PATH', '/Library/WebServer/Documents/JSDemo/');
 
 define('SSL_FORCED', false);
 
@@ -66,7 +41,7 @@ if(SSL_FORCED && $_SERVER['SERVER_PORT'] != 443) {
 }
 
 /**
- * Mail Site Configuration Array
+ * Main Site Configuration Array
  */
 
 $_SiteConfig = array();
@@ -76,57 +51,46 @@ $_SiteConfig = array();
  * 
  */
 $_SiteConfig['dsn'] = array(
-	    'dbtype'  => 'mysqlt',
-	    'username' => 'callme',
-	    'password' => 'd3VNpZvaJhwvH4XL',
+	    'dbtype'  => 'mysql',
+	    'username' => 'root',
+	    'password' => 'password',
 	    'host' => 'localhost',
-	    'database' => 'callme',
+	    'database' => 'databse',
 	    'optionstring' =>  '' //'?persist'
 	);
 
 $_SiteConfig['site'] = array(
-	'name'  		=> 'ETSZONE Call Me',
-	'title' 		=> 'Call Me | ETSZONE',
-	'url'   		=> 'http://call.etszone.com/',
-	'sslurl'   		=> 'https://call.etszone.com/',
+	'name'  		=> 'My PHP App',
+	'title' 		=> 'My App',
+	'url'   		=> 'http://demo.com/',
+	'sslurl'   		=> 'https://demo.com/',
 	'keywords'		=> '',
 	'keywords-extra'	=> '',
 	'description'	=> '',
-	'email'			=> 'do-not-reply@etszone.com',
-	'company' 		=> 'ETSZONE, LLC.',
+	'email'			=> 'do-not-reply@nomail.com',
+	'company' 		=> 'App Company',
 );
 
 $_SiteConfig['notifyemails'] = array(
-	'Administrator'			=> 'mariano@etszone.com',
-	'Mariano Luna'  		=> 'mariano@etszone.com',
-	'Kim Stautner'  		=> 'kim@etszone.com',
+	'Administrator'			=> 'admin@nomail.com',
 );
 
-$_SiteConfig['emailsentfrom'] = array(
-	'email'  		=> 'sales@etszone.com',
-	'name'  		=> 'ETS Payments',
-);
 
 $_SiteConfig['error_messages'] = array(
 	0	=> 'General Error',
 	1  	=> 'Login error, please check your username or password.',
 	2 	=> 'Login error, too many login attempts in a short period of time.',
-	3 	=> 'Invalid or non existent Project ID',
-	4 	=> 'Invalid or non existent User ID',
-	5 	=> 'No Data To Display',
+	3 	=> 'Invalid or non existent ID.',
+	4 	=> 'Database connection error.',
+	5 	=> 'No Data To Display.',
 );
 
 $_SiteConfig['usermap'] = array (
 	GUEST => 'No Access',
-	USER => 'Client',
+	USER => 'User',
 	ADMIN => 'Administrator',
 );
 
-// Userlevels that an ADMIN can create
-$_SiteConfig['admin_usermap'] = array (
-	USER => 'Client',
-	ADMIN => 'Administrator',
-);
 
 $_SiteConfig['location_states'] = array(
 	"" => "----USA--------",

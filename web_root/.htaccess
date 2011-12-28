@@ -1,2 +1,1 @@
 php_value include_path "/Library/WebServer/Documents/JSDemo/resources/:/usr/lib/php/pear/:."
-php_value auto_prepend_file "ewl/prepend.php"
