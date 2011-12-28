@@ -14,8 +14,43 @@ $_PageTitle = 'Login';
 $errorMessage = "";
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-	$username = $_POST['username'];
-   	$password = $_POST['password'];
+
+	$WSRest = new Pest(JS_WS_URL);
+	$WSRest->curl_opts[CURLOPT_HEADER] = true;
+	$restData = array(
+	  'j_username' => $_POST['username'],
+	  'j_password' => $_POST['password']
+	);
+	
+	try 
+	{		    
+		$body = $WSRest->post('login', $restData);
+		$response = $WSRest->last_response;
+		if ($response['meta']['http_code'] == '200') {
+			// Respose code 200 -> All OK
+			session_register("username");
+	        session_register("password");
+			session_register("userlevel");
+	        $_SESSION["username"]= $_POST['username'];
+	        $_SESSION["password"]= $_POST['password'];
+			$_SESSION["userlevel"]= USER;
+			// Extract the Cookie for further requests.
+			preg_match('/^Set-Cookie: (.*?)$/sm', $body, $cookie);
+			//Cookie: $Version=0; JSESSIONID=52E79BCEE51381DF32637EC69AD698AE; $Path=/jasperserver
+			$_SESSION["JSCookie"] = '$Version=0; ' . str_replace('Path', '$Path', $cookie[1]);
+	        header("location: home.php");
+	        exit();
+		} else {
+			$errorMessage = "Unauthorized Code: " . $response['meta']['http_code'];
+		}
+		
+		
+	} 
+	catch (Exception $e) 
+	{
+	    $errorMessage =  "Unauthorized Exception: " .  $e->getMessage() . "<br>";
+	}
+	/*
     $result = ws_checkUsername($username, $password);
     if (get_class($result) == 'SOAP_Fault') {
         $errorMessage = $result->getFault()->faultstring;
@@ -29,6 +64,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         header("location: home.php");
         exit();
     }
+	 * 
+	 */
 }
 
 $errorMessage = (!empty($errorMessage)) ? decorateError($errorMessage) : '';

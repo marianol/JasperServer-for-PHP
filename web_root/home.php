@@ -16,11 +16,34 @@ if($_SESSION['userlevel'] < USER) {
 	exit();
 } 
 
-$_PageTitle = 'Welcome ' . $_SESSION["username"]; 
+$_PageTitle = 'Welcome ' . $_SESSION["username"] ; 
 $tabArray =  array();
 $tabArray[99] = '<a href="#" class="active">Logged as: ' . $_SESSION["username"] . '</a>';
 $_PageTabs = decoratePageTabs($tabArray, 99);
 
+
+$WSRest = new PestXML(JS_WS_URL);
+// Set auth Header
+$WSRest->curl_opts[CURLOPT_COOKIE] = $_SESSION["JSCookie"] ;
+
+try 
+{		    
+	$resources = $WSRest->get('resources/reports');
+	//$response = $pest->post('login', $restData);
+	
+	//$screen .= "\n" . print_r($WSRest->last_response, true);
+	$screen = '<ul>';
+	foreach ($resources->resourceDescriptor as $contents) {
+	    $screen .= '<li>' . $contents->label .'</li>';
+	}
+	$screen .= '</ul>';
+} 
+catch (Exception $e) 
+{
+    $screen .=  "Exception: <pre>" .  $e->getMessage() . "</pre>";
+}
+
+$screen .= htmlentities(print_r($resources, true));
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
@@ -66,8 +89,9 @@ $_PageTabs = decoratePageTabs($tabArray, 99);
 			<?php echo $_PageTabs; ?>
 			</ul> 
     	<h3>Welcome to the JasperServer sample (PHP version)</h3>
-
-   
+    	<pre>
+<?php echo $screen; ?>
+   </pre>
 		</div>
 		<div id="footer" class="span-16"> 
 			<!-- Footer Links -->

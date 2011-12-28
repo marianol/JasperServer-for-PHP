@@ -9,11 +9,13 @@ session_start();
 /* Get Required Libraries */
 require_once 'RESTclient.php';
 require_once 'functions.php';
+require_once 'PEST/PestXML.php';
+
 /**
  * Site Constants
  *
  */
-define('TEMPLATE_PATH', INCLUDE_PATH . 'templates/'); // Templates location
+
 define('TABLE_PREFIX', 'ecm_'); 
 
 /**
@@ -40,6 +42,13 @@ if(SSL_FORCED && $_SERVER['SERVER_PORT'] != 443) {
    exit();
 }
 
+/**
+ * Jasper Server Web Sevices Constants
+ */
+
+//define('JS_WS_URL', 'http://localhost:8080/jasperserver/rest/'); // Community
+define('JS_WS_URL', 'http://localhost:8080/jasperserver-pro/rest/'); // Pro
+	
 /**
  * Main Site Configuration Array
  */
