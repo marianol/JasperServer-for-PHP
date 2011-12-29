@@ -8,6 +8,10 @@
  * @copyright Copyright (c) 2011
  */
 
+ 
+require_once('config.php');
+$_PageTitle = 'Integration using iframes'; 
+
 $currentUri = "/";
 $parentUri = "/";
 
@@ -69,13 +73,13 @@ switch ($myPath) {
 		break;	
 
 	default:
-		$iFramePath = "flow.html?_flowId=searchFlow&userLocale=en_US";
+		$iFramePath = "/flow.html?_flowId=homeFlow";
 		$tab['home'] = $tabon;
 		break;
 }
 
 
-$myIframeSRC = ($myIframeSRC == '') ? $iFrameServerURI . $iFramePath . $iFrameLoginInfo : $myIframeSRC ;
+$myIframeSRC = ($myIframeSRC == '') ? '"' . $iFrameServerURI . $iFramePath . $iFrameLoginInfo . '"' : '"' . $myIframeSRC . '"';
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
