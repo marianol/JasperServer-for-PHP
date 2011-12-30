@@ -11,6 +11,7 @@
 require_once('config.php');
 session_unset();
 session_destroy();
+setcookie('JSESSIONID', $cookievalue[1], time() - 1000, "/jasperserver-pro");
 header('Location: ' . WWW_ROOT );
 
 ?>

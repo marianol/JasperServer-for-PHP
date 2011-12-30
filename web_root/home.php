@@ -59,6 +59,36 @@ try
 	}
 	$screen .= '</ul>';
 } 
+catch (Pest_Unauthorized $e) {
+	// Check for a 401 (login timed out)	
+	$WSRest->curl_opts[CURLOPT_HEADER] = true;
+	$restData = array(
+	  'j_username' => $_SESSION['username'],
+	  'j_password' => $_SESSION['password']
+	);
+	
+    try {		    
+		$body = $WSRest->post('login', $restData);
+		$response = $WSRest->last_response;
+		if ($response['meta']['http_code'] == '200') {
+			// Respose code 200 -> All OK
+			// Extract the Cookie for further requests.
+			preg_match('/^Set-Cookie: (.*?)$/sm', $body, $cookie);
+			//Cookie: $Version=0; JSESSIONID=52E79BCEE51381DF32637EC69AD698AE; $Path=/jasperserver
+			$_SESSION["JSCookie"] = '$Version=0; ' . str_replace('Path', '$Path', $cookie[1]);
+			// Reload this page.
+	        header("location: home.php");
+	        exit();
+		} else {
+			header("location: logout.php");
+			exit();
+		}
+	} 
+	catch (Exception $e) {
+	   	header("location: logout.php");
+		exit();
+	}
+}
 catch (Exception $e) 
 {
     $screen .=  "Exception: <pre>" .  $e->getMessage() . "</pre>";

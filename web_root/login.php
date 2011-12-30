@@ -38,6 +38,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			preg_match('/^Set-Cookie: (.*?)$/sm', $body, $cookie);
 			//Cookie: $Version=0; JSESSIONID=52E79BCEE51381DF32637EC69AD698AE; $Path=/jasperserver
 			$_SESSION["JSCookie"] = '$Version=0; ' . str_replace('Path', '$Path', $cookie[1]);
+			preg_match('/=(.*?);/' , $cookie[1], $cookievalue);
+			setcookie('JSESSIONID', $cookievalue[1], time() + (3600 * 3), "/jasperserver-pro");
 	        header("location: home.php");
 	        exit();
 		} else {

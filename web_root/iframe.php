@@ -31,7 +31,7 @@ if($pos === false || $pos == 0) {
 
 // Change this to fir yout needs
 $iFrameServerURI = "http://localhost:8080/jasperserver-pro/";   
-$iFrameLoginInfo = "&theme=embed&j_username=" . $_SESSION["username"] . "&j_password=" . $_SESSION["password"] ;
+$iFrameLoginInfo = "&theme=embed"; //&j_username=" . $_SESSION["username"] . "&j_password=" . $_SESSION["password"] ;
 $myIframeSRC = '';
 $myIframeheight = "818px";
 
