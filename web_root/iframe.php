@@ -1,7 +1,7 @@
 <?php
 /**
  * iframe.php 
- * JS integration via iFrame
+ * JS integration via iFrame this method uses the Rest Cookie seup in login.php to authenticate with the server.
  *
  *
  * @author Mariano Luna

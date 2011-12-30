@@ -2,7 +2,8 @@
 /**
  * login.php 
  * Show the login form and authenticate the user against JasperServer
- *
+ * I also use the JS Session ID sent from the REST Auth to set a cookie for the iframe integration
+ * 
  *
  * @author Mariano Luna
  * @copyright Copyright (c) 2011
@@ -34,10 +35,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	        $_SESSION["username"]= $_POST['username'];
 	        $_SESSION["password"]= $_POST['password'];
 			$_SESSION["userlevel"]= USER;
-			// Extract the Cookie for further requests.
+			
+			//Cookie: JSESSIONID=52E79BCEE51381DF32637EC69AD698AE; $Path=/jasperserver
+			// Extract the Cookie and save the string in my session for further requests.
 			preg_match('/^Set-Cookie: (.*?)$/sm', $body, $cookie);
-			//Cookie: $Version=0; JSESSIONID=52E79BCEE51381DF32637EC69AD698AE; $Path=/jasperserver
 			$_SESSION["JSCookie"] = '$Version=0; ' . str_replace('Path', '$Path', $cookie[1]);
+			
+			// Grab the JS Session ID and set the cookie in the right path so 
+			// when I present an iFrame I can share be authenticated
+			// For this to work JS and the App have to run in the same domain 
 			preg_match('/=(.*?);/' , $cookie[1], $cookievalue);
 			setcookie('JSESSIONID', $cookievalue[1], time() + (3600 * 3), "/jasperserver-pro");
 	        header("location: home.php");
@@ -52,22 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	{
 	    $errorMessage =  "Unauthorized Exception: " .  $e->getMessage() . "<br>";
 	}
-	/*
-    $result = ws_checkUsername($username, $password);
-    if (get_class($result) == 'SOAP_Fault') {
-        $errorMessage = $result->getFault()->faultstring;
-    } else {
-        session_register("username");
-        session_register("password");
-		session_register("userlevel");
-        $_SESSION["username"]=$username;
-        $_SESSION["password"]=$password;
-		$_SESSION["userlevel"]= USER;
-        header("location: home.php");
-        exit();
-    }
-	 * 
-	 */
+
 }
 
 $errorMessage = (!empty($errorMessage)) ? decorateError($errorMessage) : '';

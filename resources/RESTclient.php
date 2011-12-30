@@ -1,5 +1,5 @@
 <?php
-
+// This file is not being used
 	$jasperserver_url = "http://localhost:8080/jasperserver/services/";
 
 	$jasperserver_url = "http://localhost:8080/jasperserver-pro/services/";
