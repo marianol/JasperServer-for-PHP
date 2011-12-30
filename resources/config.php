@@ -83,7 +83,7 @@ $_SiteConfig['site'] = array(
 );
 
 $_SiteConfig['user_menu']  = '
-	<li ><a href="home.php">Home</a></li>
+	<li ><a href="home.php">Repository</a></li>
 	<li ><a href="iframe.php">iFrame Integration</a></li> 
 	<li ><a href="about.php">About</a></li> 
 	<li ><a href="logout.php">Log out</a></li> 
