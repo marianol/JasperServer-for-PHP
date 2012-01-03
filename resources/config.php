@@ -28,6 +28,7 @@ define('ADMIN', 5); // for administrators.
 
 /**
  * HTTP path to www/ directory.
+ * Change this to fit your instalation
  */
 define('WWW_ROOT', '/myphpapp/'); // 
 define('SITE_PATH', '/Library/WebServer/Documents/JSDemo/');
@@ -44,7 +45,13 @@ if(SSL_FORCED && $_SERVER['SERVER_PORT'] != 443) {
 
 /**
  * Jasper Server Web Sevices Constants
+ * Change this paths to fit your instalations.
+ * Warining: 
+ * - If Jasperserver and this app do not share the same domain
+ * the iframe integration will require passing user and password to the iframe
+ * * see iframe.php
  */
+
 
 //define('JS_WS_URL', 'http://localhost:8080/jasperserver/rest/'); // Community
 define('JS_WS_URL', 'http://localhost:8080/jasperserver-pro/rest/'); // Pro
@@ -56,19 +63,6 @@ $_PageTitle = ''; // Default Page title
 $_PageTabs = ''; // Default Tabs
 
 $_SiteConfig = array();
-
-/**
- * Database Connection
- * 
- */
-$_SiteConfig['dsn'] = array(
-	    'dbtype'  => 'mysql',
-	    'username' => 'root',
-	    'password' => 'password',
-	    'host' => 'localhost',
-	    'database' => 'databse',
-	    'optionstring' =>  '' //'?persist'
-	);
 
 $_SiteConfig['site'] = array(
 	'name'  		=> 'My PHP App',
@@ -96,7 +90,18 @@ $_SiteConfig['notifyemails'] = array(
 	'Administrator'			=> 'admin@nomail.com',
 );
 
-
+/**
+ * Database Connection
+ * - Not used in this sample
+ */
+$_SiteConfig['dsn'] = array(
+	    'dbtype'  => 'mysql',
+	    'username' => 'root',
+	    'password' => 'password',
+	    'host' => 'localhost',
+	    'database' => 'databse',
+	    'optionstring' =>  '' //'?persist'
+	);
 $_SiteConfig['error_messages'] = array(
 	0	=> 'General Error',
 	1  	=> 'Login error, please check your username or password.',
