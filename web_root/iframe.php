@@ -37,9 +37,7 @@ $iFrameLoginInfo = "&theme=embed";
 
 // Check if there is a JS session cookie set if not pass the user and pass in the iframe
 // For the Session cookie to work JS and this app must be on the same domain 
-if (!isset($_COOKIE['JSESSIONID'])) {
-	$iFrameLoginInfo .= "&j_username=" . $_SESSION["username"] . "&j_password=" . $_SESSION["password"] ;
-}
+//	$iFrameLoginInfo .= "&j_username=" . $_SESSION["username"] . "&j_password=" . $_SESSION["password"] ;
 
 $myIframeSRC = '';
 $myIframeheight = "818px";
