@@ -15,7 +15,7 @@ $_PageTitle = 'Integration using iframes';
 $currentUri = "/";
 $parentUri = "/";
 
-$myPath = (isset($_GET['action'])) ? urldecode($_GET['action']) : 'none';
+$myPath = (isset($_GET['action'])) ? urldecode($_GET['action']) : 'home';
 
 if ($_GET['uri'] != '') {
  	$currentUri = $_GET['uri'];
@@ -31,23 +31,31 @@ if($pos === false || $pos == 0) {
 
 // Change this to fir yout needs
 $iFrameServerURI = "http://localhost:8080/jasperserver-pro/";   
-$iFrameLoginInfo = "&theme=embed"; //&j_username=" . $_SESSION["username"] . "&j_password=" . $_SESSION["password"] ;
+
+// This iframe uses the embed theme if the theme is not installed comment this line
+$iFrameLoginInfo = "&theme=embed"; 
+
+// Check if there is a JS session cookie set if not pass the user and pass in the iframe
+// For the Session cookie to work JS and this app must be on the same domain 
+if (!isset($_COOKIE['JSESSIONID'])) {
+	$iFrameLoginInfo .= "&j_username=" . $_SESSION["username"] . "&j_password=" . $_SESSION["password"] ;
+}
+
 $myIframeSRC = '';
 $myIframeheight = "818px";
 
 //Initialize tabs
-$tabon = 'ontab';
-$tab['home'] = "offtab";
-$tab['repository'] = "offtab";
-$tab['analisys'] = "offtab";
-$tab['adHoc'] = "offtab";
-$tab['section7'] = "offtab";
-$tab['section8'] = "offtab";
-$tab['section9'] = "offtab";
-$tab['section10'] = "offtab";
-$tab['section11'] = "offtab";
-//set active tab
-$tab[$myPath] = $tabon;
+$tabArray =  array();
+
+$tabArray['home'] = '<a href="iframe.php" class="active">JS Home</a>';
+$tabArray['adHoc'] =  '<a href="iframe.php?action=adHoc" class="active">Ad Hoc Report</a>';
+$tabArray['repository'] = '<a href="iframe.php?action=repository" class="active">Repository View</a>';
+$tabArray['analisys'] =  '<a href="iframe.php?action=analisys" class="active">Analisys View</a>';
+$tabArray[99] = '<a href="#" class="inactive">Logged as: ' . $_SESSION["username"] . '</a>';
+
+// Decorate and set active tab
+$_PageTabs = decoratePageTabs($tabArray, $myPath);
+
 switch ($myPath) {
 	case 'adHoc':
 		$iFramePath = "flow.html?_flowId=adhocFlow&userLocale=en_US";
@@ -57,21 +65,11 @@ switch ($myPath) {
 		break;	
 	case 'section7':
 		$iFramePath = "flow.html?_flowId=viewReportFlow&_flowId=viewReportFlow&reportUnit=/reports/Balance_Sheet_1&userLocale=en_US";
-		// 
+		// View Specific report
 		break;	
-	case 'section8': //open ad hoc crosstab
-		$iFramePath = "flow.html?_flowId=adhocFlow&_eventId=initForExistingReport&resource=/reports/Segmentation_Ad_Hoc&userLocale=en_US";  
-		// or
-		// $myIframeSRC = "http://www.google.com";
+	case 'analisys': //open an olap view
+		$iFramePath = "olap/viewOlap.html?new=true&parentFlow=searchFlow&name=%2Fsupermart%2FrevenueAndProfit%2FProfitView&ParentFolderUri=%2Fsupermart%2FrevenueAndProfit";  
 		break;
-	case 'section9':
-		$iFramePath = "flow.html?_flowId=viewReportFlow&standAlone=true&_flowId=viewReportFlow&reportUnit=/reports/FormattedReport_1";
-		//flow.html?_flowId=adhocFlow&_eventId=initForExistingReport&resource=/public/Adhoc_Crosstab";
-		break;			
-	case 'section10': // actually section 13 - run in Spanish
-		$iFramePath = "flow.html?_flowId=homeFlow&userLocale=es";
-		break;	
-
 	default:
 		$iFramePath = "/flow.html?_flowId=homeFlow";
 		$tab['home'] = $tabon;
