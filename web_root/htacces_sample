@@ -1,1 +1,2 @@
 php_value include_path "/Library/WebServer/Documents/JSDemo/resources/:/usr/lib/php/pear/:."
+".;C:\test;C:\php\PEAR"
