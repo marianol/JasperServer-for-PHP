@@ -42,35 +42,17 @@ try
 			case 'datasource':
 				// Get the Datasource to be able to query the input controls if any.
 				$dsUri = $contents->resourceProperty->value;
-				$screen .= "<hr> <strong>DS URI: </strong>" . $dsUri . "";
+				//$screen .= "<hr> <strong>DS URI: </strong>" . $dsUri . "";
 			break;	
 			case 'inputControl':
-				// Get Input Control resource
-				$inputControlData = array();
-				$inputControlData['URI'] =  (string) $contents->resourceDescriptor->resourceProperty->value;
-				foreach ($contents->resourceProperty as $inputControl) {
-					switch ($inputControl['name']) {
-						case 'PROP_INPUTCONTROL_TYPE':
-							$inputControlData['type'] = $JS_IC_Type[(int) $inputControl->value];
-						break;
-						default:
-							$inputControlData[(string) $inputControl['name']] =  (string) $inputControl->value;
-					}
-				}
-				$screen .= "<hr> <strong>" . $contents->label . "</strong> (Input Control) <br> 
-							- Type: ". $inputControlData['type'] . " <br>
-							- Mandatory: ". $inputControlData['PROP_INPUTCONTROL_IS_MANDATORY'] . " <br>
-							- Visible: ". $inputControlData['PROP_INPUTCONTROL_IS_VISIBLE'] . " <br>
-							- URI: ". $inputControlData['URI'] . " <br>
-							- (Note: this sample does not render input controls)";
-				//$screen .= "<hr><pre>" . htmlentities(print_r($inputControlData, true)) . "</pre>";
-				//$screen .= "<hr><pre>" . htmlentities(print_r($contents->asXML(), true)) . "</pre>";
+				// Render Input Control
+				$screen .= RenderInputControl($contents, $dsUri);
 			break;
 			default:
 				//$screen .= "<hr><pre>" . htmlentities(print_r($contents, true)) . "</pre>";	
 		}
 	}
-	$screen .= "<hr> DEBUG - Full Response: <pre>" . htmlentities(print_r($resource, true)) . "</pre>";
+	$screen .= "<div style='display:none'> <hr> DEBUG - Full Response: <pre>" . htmlentities(print_r($resource->asXML(), true)) . "</pre> </div>";
 } 
 catch (Pest_Unauthorized $e) {
 	// Check for a 401 (login timed out)	

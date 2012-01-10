@@ -138,5 +138,83 @@
 	define("RUN_OUTPUT_IMAGES_URI","IMAGES_URI");
 	define("RUN_OUTPUT_PAGE","PAGE");
 
+function RenderInputControl($ICResource, $dsUri) {				// Get Input Control resource
+	global $JS_IC_Type;
+	
+	$html = '';
+	$inputControlData = array();
+	$inputControlData['NAME'] = (string) $ICResource['name'];
+	$inputControlData['URI'] = (string) $ICResource['uriString'];
+	foreach ($ICResource->resourceProperty as $inputControl) {
+		switch ($inputControl['name']) {
+			case 'PROP_INPUTCONTROL_TYPE':
+				$inputControlData['type'] = $JS_IC_Type[(int) $inputControl->value];
+			break;
+			default:
+				if (!empty($inputControl->value)) {
+					$inputControlData[(string) $inputControl['name']] =  (string) $inputControl->value;
+				} else {
+					$inputControlData[(string) $inputControl['name']] = $inputControl;	
+				}
+		}
+	}
+	/*
+	$screen .= "<hr> <strong>" . $contents->label . "</strong> (Input Control) <br> 
+				- Type: ". $inputControlData['type'] . " <br>
+				- Mandatory: ". $inputControlData['PROP_INPUTCONTROL_IS_MANDATORY'] . " <br>
+				- Visible: ". $inputControlData['PROP_INPUTCONTROL_IS_VISIBLE'] . " <br>
+				- URI: ". $inputControlData['URI'] . " <br>
+				- (Note: this sample does not render input controls)";
+	$screen .= "<hr><pre>" . htmlentities(print_r($inputControlData, true)) . "</pre><hr>";
+	$screen .= "<hr><pre>" . htmlentities(print_r($contents->asXML(), true)) . "</pre><hr>";
+	 * 
+	 * 
+	 */
+	
+	if ($inputControlData['PROP_INPUTCONTROL_IS_MANDATORY'] == 'true') {
+		$remark = "(*)";
+		$attr = "";
+	} else {
+		$remark = "";
+		$attr = "";
+	}	
+	$html .= "<hr> <strong>" . $ICResource->label . ": " . $remark . "</strong> ";
+	switch ($inputControlData['type']) {
+		case 'IC_TYPE_SINGLE_SELECT_QUERY':
+			$html .= makeSelectArray('PARAM_' . $inputControlData['NAME'], '', RestGetInputControl($inputControlData, $dsUri), "", $attr);
+			break;
+		case 'IC_TYPE_BOOLEAN':
+			$html .= '<input type="checkbox" value="true" name="PARAM_'. $inputControlData['NAME'] . '" >';
+			break;
+		default:
+			$html .= '<hr><strong>Input Control Rendering for ' . $inputControlData['type'] . ' Not Implemented</strong>';
+			break;
+	}
 
+	return $html;
+}
+
+function RestGetInputControl($inputControl, $DataSource) {
+	//GET http://localhost:8080/jasperserver/rest/resource
+	// /reports/samples/Cascading_multi_select_report_files/ 
+	// Cascading_state_multi_select?IC_GET_QUERY_DATA=/datasources/JServerJNDIDS& PL_Country_multi_select=USA&PL_Country_multi_select=Mexico
+	$result = array();
+	$WSRest = new PestXML(JS_WS_URL);
+	// Set auth Header
+	$WSRest->curl_opts[CURLOPT_COOKIE] = $_SESSION["JSCookie"] ;
+	try {		
+		$resource = $WSRest->get('resource' . $inputControl['URI'] . '?IC_GET_QUERY_DATA=' . $DataSource );
+		foreach ($resource->resourceProperty as $property) {
+			if ($property['name'] == 'PROP_QUERY_DATA') {
+				foreach ($property->resourceProperty as $querydata) {
+					$result[(string) $querydata->value] = (string) $querydata->resourceProperty->value;
+				}
+			}
+		}
+	} catch (Exception $e) {
+    	$result['ERROR'] =  "Exception: <pre>" .  $e->getMessage() . "</pre>";
+	}
+
+	return $result;
+}
 ?>
