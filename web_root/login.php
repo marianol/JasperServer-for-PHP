@@ -107,7 +107,7 @@ $errorMessage = (!empty($errorMessage)) ? decorateError($errorMessage) : '';
 			<ul class="tabs">
 			<?php echo $_PageTabs; ?>
 			</ul> 
-    	<h3>Welcome to the JasperServer sample (PHP version)</h3>
+    	<h3>Welcome to MyReport</h3>
 		<div class="prepend-8 append-8 last">
 		<div class="box">
 		   <form name = 'login' action = '' method = 'POST'>
