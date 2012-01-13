@@ -32,6 +32,20 @@ $tabArray =  array();
 $tabArray[99] = '<a href="#" class="active">Logged as: ' . $_SESSION["username"] . '</a>';
 $_PageTabs = decoratePageTabs($tabArray, 99);
 
+$report_params = array();
+$reportListParams = array();
+
+// See if we have parameters
+foreach ($_POST as $key => $value) {
+	if (strncmp("PARAM_S_", $key,8) == 0) {
+		if (!empty($value)) {
+			$report_params[substr($key,8)] = $value;
+		}
+	}
+	if (strncmp("PARAM_M_", $key,8) == 0) {
+		$reportListParams[substr($key,8)] = $value;
+	}
+}
 
 $WSRest = new PestXML(JS_WS_URL);
 // Set auth Header
@@ -39,15 +53,31 @@ $WSRest->curl_opts[CURLOPT_COOKIE] = $_SESSION["JSCookie"] ;
 
 try {
 	// Prepare the resourceDescriptor
-	$data = '<resourceDescriptor name="' . $reportName . '" wsType="reportUnit" uriString="' . $reportUri . '" isNew="false"></resourceDescriptor>';	    
+	$data = '<resourceDescriptor name="' . $reportName . '" wsType="reportUnit" uriString="' . $reportUri . '" isNew="false">' . "\n";	    
+	if (!empty($report_params)) {
+		foreach ($report_params as $name => $value) { 	
+			$data .='<parameter name="' . $name . '" ><![CDATA[' . $value . ']]></parameter>' . "\n";
+		}
+	}
 
-	$reportMetadata = $WSRest->put('report' . $reportUri . '?RUN_OUTPUT_FORMAT=' . $reportFormat, $data);
+	if (!empty($reportListParams)) {
+		foreach ($reportListParams as $name => $value) { // isListItem=\"true\" 	
+			foreach ($value as $itemnum => $item) {
+				$data .='<parameter name="' . $name . '" isListItem="true" ><![CDATA[' . $item . ']]></parameter>' . "\n";
+			}
+			
+		}
+	}	
+	$data .= '</resourceDescriptor>';
+	// echo print_r($_POST, true) . "<hr>" . htmlentities($data); die();
+	$reportMetadata = $WSRest->put('report' . $reportUri . '?RUN_OUTPUT_FORMAT=' . $reportFormat , $data);
 
 	$reportUUID = $reportMetadata->uuid;
 	$WSRestRaw = new Pest(JS_WS_URL);
 	$WSRestRaw->curl_opts[CURLOPT_COOKIE] = $_SESSION["JSCookie"] ;
-	
+
 	$file = array();
+	$forceDownload = false;
 	$filecount = 0;
 	foreach ($reportMetadata->file as $reportFiles ) {
 		$screen .= '<hr> Files: ' . $reportFiles . ' (' . $reportFiles['type']  . ') <br>';	
@@ -56,21 +86,29 @@ try {
 		//$reportfile = $WSRestRaw->get('report/' . $reportUUID . '?file=' . $reporFiles);
 		$filecount++;
 	}
-	if (count($file) == 1) {
+	
+	if (count($file) == 1 && $file[0]['mime'] != 'text/html') {
 		// Just one file send it..
-		$reportfile = $WSRestRaw->get($file[0]['request']);
-		header('Content-Description: File Transfer');
-	    header('Content-Type: ' . $file[0]['mime']);
-	    header('Content-Disposition: attachment; filename = ' .$reportName . '.' .  end(explode('/', $file[0]['mime']))); //. basename($file));
-	    header('Content-Transfer-Encoding: binary');
-	    header('Expires: 0');
-	    header('Cache-Control: must-revalidate');
-	    header('Pragma: public');
-	    //header('Content-Length: ' . sizeof($reportfile));
-	    ob_clean();
-	    flush();
-	    echo $reportfile;
-	    exit;
+		$requestUrl = $file[0]['request'];
+		try {
+			$reportfile = $WSRestRaw->get($requestUrl);
+			header('Content-Description: File Transfer');
+		    header('Content-Type: ' . $file[0]['mime']);
+		    header('Content-Disposition: attachment; filename = ' .$reportName . '.' .  end(explode('/', $file[0]['mime']))); //. basename($file));
+		    header('Content-Transfer-Encoding: binary');
+		    header('Expires: 0');
+		    header('Cache-Control: must-revalidate');
+		    header('Pragma: public');
+		    //header('Content-Length: ' . sizeof($reportfile));
+		    ob_clean();
+		    flush();
+		    echo $reportfile;
+		    exit;
+		} catch (Exception $e) {
+    		$screen .=  "Exception When requesting URL ". $requestUrl . ": <pre>" .  $e->getMessage() . "</pre>";
+			$screen .=  "<hr><pre>" .  print_r($file, true). "</pre>";
+		}
+
 	} else {
 		// More than one file tipicaly HTML request, just render the HTML
 		$reportfile = $WSRestRaw->get('report/' . $reportUUID . '?file=report');

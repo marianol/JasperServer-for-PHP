@@ -139,18 +139,16 @@ catch (Exception $e)
      			<input type="hidden" name="uri" value="<?php echo $reportUnit ?>">
      			<input type="hidden" name="name" value="<?php echo $currentReport ?>">
 			     Export format: <select name="format">
-			         <option value="PDF">PDF</option>
-			         <option value="HTML">HTML</option>
 			         
+			         <option value="HTML">HTML</option>
+			         <option value="PDF">PDF</option>
 			         <option value="XLS">XLS</option>
 			     </select>
 			     
-			     
+			     <?php echo $screen; ?>
 			     
 			     <input type="submit" value="Run the report">
-		     </form>
-			<?php echo $screen; ?>
-   
+   			</form>
 		</div>
 		<div id="footer" class="span-16"> 
 			<!-- Footer Links -->

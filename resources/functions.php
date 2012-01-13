@@ -25,7 +25,7 @@ function decoratePageTabs($tabArray, $selectedTab = -1) {
  * @param boolean $selectall
  * @return string
  */
-function makeSelectArray($ComboName, $SelectedValue, $array, $css = "", $atributo = "", $selectall = false)
+function makeSelectArray($ComboName, $SelectedValue, $array, $css = "", $atributo = "", $emptyitem = false, $selectall = false)
 {
 	
 	$combo_box = "";
@@ -33,7 +33,8 @@ function makeSelectArray($ComboName, $SelectedValue, $array, $css = "", $atribut
 	
 	if ($selectall) {   
 		$combo_box .= '<option value="_ALL_">ALL</option>'."\n";
-	} else {
+	} 
+	if ($emptyitem) {
 		$combo_box .= '<option value=""></option>'."\n";
 	}
 

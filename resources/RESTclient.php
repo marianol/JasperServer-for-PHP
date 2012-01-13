@@ -172,22 +172,31 @@ function RenderInputControl($ICResource, $dsUri) {				// Get Input Control resou
 	 */
 	
 	if ($inputControlData['PROP_INPUTCONTROL_IS_MANDATORY'] == 'true') {
-		$remark = "(*)";
+		$mandatory = true;
 		$attr = "";
 	} else {
-		$remark = "";
+		$mandatory = false;
 		$attr = "";
 	}	
-	$html .= "<hr> <strong>" . $ICResource->label . ": " . $remark . "</strong> ";
+	
+	$html .= "<hr> <strong>" . $ICResource->label . ": ";
+	$html .= ($mandatory) ? "(*)" : "";
+	$html .= "</strong> ";
 	switch ($inputControlData['type']) {
 		case 'IC_TYPE_SINGLE_SELECT_QUERY':
-			$html .= makeSelectArray('PARAM_' . $inputControlData['NAME'], '', RestGetInputControl($inputControlData, $dsUri), "", $attr);
+			$html .= makeSelectArray('PARAM_S_' . $inputControlData['NAME'], '', RestGetInputControl($inputControlData, $dsUri), "", $attr, !$mandatory);
 			break;
 		case 'IC_TYPE_BOOLEAN':
-			$html .= '<input type="checkbox" value="true" name="PARAM_'. $inputControlData['NAME'] . '" >';
+			$html .= '<input type="checkbox" value="true" name="PARAM_S_'. $inputControlData['NAME'] . '" >';
+			break;
+		case 'IC_TYPE_SINGLE_VALUE':
+			$html .= '<input type="text" name="PARAM_S_'. $inputControlData['NAME'] . '" >';
+			break;
+		case 'IC_TYPE_MULTI_SELECT_QUERY':
+			$html .= makeSelectArray('PARAM_M_' . $inputControlData['NAME'] . "[]", '', RestGetInputControl($inputControlData, $dsUri), "", $attr . " MULTIPLE");
 			break;
 		default:
-			$html .= '<hr><strong>Input Control Rendering for ' . $inputControlData['type'] . ' Not Implemented</strong>';
+			$html .= '<strong>Input Control Rendering for ' . $inputControlData['type'] . ' Not Implemented</strong>';
 			break;
 	}
 
@@ -207,7 +216,11 @@ function RestGetInputControl($inputControl, $DataSource) {
 		foreach ($resource->resourceProperty as $property) {
 			if ($property['name'] == 'PROP_QUERY_DATA') {
 				foreach ($property->resourceProperty as $querydata) {
-					$result[(string) $querydata->value] = (string) $querydata->resourceProperty->value;
+					$display ='';
+					foreach ($querydata->resourceProperty as $displaycolumns) {
+						$display .= (string) $displaycolumns->value . ' ';
+					}
+					$result[(string) $querydata->value] = $display;
 				}
 			}
 		}
