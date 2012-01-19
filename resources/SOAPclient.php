@@ -1,5 +1,20 @@
 <?php
+/*
+ * 
+LICENSE AND COPYRIGHT NOTIFICATION
+==================================
 
+The Proof of Concept deliverable(s) are (c) 2011 Jaspersoft Corporation - All rights reserved. 
+Jaspersoft grants to you a non-exclusive, non-transferable, royalty-free license to use the deliverable(s) pursuant to 
+the applicable evaluation license agreement (or, if you later purchase a subscription, the applicable subscription 
+agreement) relating to the Jaspersoft software product at issue. 
+
+The Jaspersoft Sales department provides the Proof of Concept deliverable(s) "AS IS" and WITHOUT A WARRANTY OF ANY KIND. 
+It is not covered by any Jaspersoft Support agreement or included in any Professional Services offering. 
+At the discretion of the head of the Jaspersoft Professional Services team, support, maintenance and enhancements may be 
+available for such deliverable(s) as "Time for Hire": http://www.jaspersoft.com/time-for-hire.
+
+ */
 	$jasperserver_url = "http://localhost:8080/jasperserver/services/";
 
 	$jasperserver_url = "http://localhost:8080/jasperserver-pro/services/";
