@@ -32,6 +32,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 	$WSRest = new Pest(JS_WS_URL);
 	$WSRest->curl_opts[CURLOPT_HEADER] = true;
+	$myuserdata = explode("|", $_POST['username']);
+	if ($_POST['username'] == 'jasperadmin') {
+		$_POST['username'] = 'jasperadmin|organization_1';
+	}
 	$restData = array(
 	  'j_username' => $_POST['username'],
 	  'j_password' => $_POST['password']

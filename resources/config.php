@@ -80,7 +80,7 @@ $_PageTabs = ''; // Default Tabs
 $_SiteConfig = array();
 
 $_SiteConfig['site'] = array(
-	'name'  		=> 'My PHP App',
+	'name'  		=> 'My Report App',
 	'title' 		=> 'My App',
 	'url'   		=> 'http://demo.com/',
 	'sslurl'   		=> 'https://demo.com/',

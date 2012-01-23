@@ -139,7 +139,7 @@ catch (Exception $e)
 			<ul class="tabs">
 			<?php echo $_PageTabs; ?>
 			</ul> 
-    		<h3>Welcome to the JasperServer Repository (PHP Rest Web Services)</h3>
+    		<h3>Welcome to your repository (Using Rest Web Services)</h3>
 			<h5><?php echo $currentPath; ?></h5>
 			<?php echo $screen; ?>
    
