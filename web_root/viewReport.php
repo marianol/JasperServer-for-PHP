@@ -157,6 +157,7 @@ catch (Exception $e)
 			         <option value="HTML">HTML</option>
 			         <option value="PDF">PDF</option>
 			         <option value="XLS">XLS</option>
+			         <option value="SWF">SWF</option>
 			     </select>
 			     
 			     <?php echo $screen; ?>
