@@ -142,6 +142,7 @@ available for such deliverable(s) as "Time for Hire": http://www.jaspersoft.com/
 	define("RUN_OUTPUT_FORMAT_XML","XML");
 	define("RUN_OUTPUT_FORMAT_CSV","CSV");
 	define("RUN_OUTPUT_FORMAT_RTF","RTF");
+	define("RUN_OUTPUT_FORMAT_SWF","SWF");
 	define("RUN_OUTPUT_IMAGES_URI","IMAGES_URI");
 	define("RUN_OUTPUT_PAGE","PAGE");
 

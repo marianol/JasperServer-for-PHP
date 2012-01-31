@@ -24,21 +24,36 @@ available for such deliverable(s) as "Time for Hire": http://www.jaspersoft.com/
 
 require_once('config.php');
 
-$root = ($_POST['root'] != '') ? htmlentities($_POST['root']) : '/';
+$root = ($_REQUEST['root'] != '') ? htmlentities($_REQUEST['root']) : '/';
 $message = '';
 $WSRest = new PestXML(JS_WS_URL);
 // Set auth Header
 $WSRest->curl_opts[CURLOPT_COOKIE] = $_SESSION["JSCookie"] ;
-
+$prevPath = "";
 foreach (explode('/', $root) as $key => $items) {
 	$tempArray[] = $items;
 	if ($item == '' and $key == 0) {
 		$currentPathArray[] = 'Repository';
+		$prevPath = "";
 	} else {
 		$currentPathArray[] = ucfirst($items);
 		/* link = 'root=' . implode("/", $tempArray) */
+		
 	}
 }
+
+$cpath = explode('/', $root);
+
+if ($cpath[1] != '') {
+	// Non Root
+	$fruit = array_pop($cpath);
+	$prevPath = implode("/", $cpath);
+	$prevPath = (empty($prevPath)) ? "/" : $prevPath;
+} else {
+	//Root
+	$prevPath = '';
+}
+
 $currentPath = implode(" &raquo; ", $currentPathArray);
 
 try 
@@ -48,6 +63,13 @@ try
 	
 	//$screen .= "\n" . print_r($WSRest->last_response, true);
 	$screen = '<repository>' . "\n";
+	if ($prevPath != '') {
+		$screen .= '<item>' . "\n";
+		$screen .= '<label>..</label>' . "\n";
+		$screen .= '<type>folder</type>' . "\n";
+		$screen .= '<uri>' . $prevPath . '</uri>' . "\n";
+		$screen .= '</item>' . "\n";
+	}
 	foreach ($resources->resourceDescriptor as $contents) {
 		$screen .= '<item>' . "\n";
 		$screen .= '<label>' . $contents->label . '</label>' . "\n";
@@ -56,6 +78,7 @@ try
 		$screen .= '</item>' . "\n";
 		
 	}
+
 	$screen .= '</repository>' . "\n";
 	$message = "Success";
 } 
@@ -68,7 +91,8 @@ catch (Exception $e)
     $message = $e->getMessage();
 }
 
-//$screen .= htmlentities(print_r($resources, true));
+/*
+
 //start outputting the XML
 $output = "<cookie>\n";
 $output .= $_SESSION['JSCookie'];
@@ -76,13 +100,18 @@ $output .= "</cookie>\n";
 $output .= "<currentpath>\n";
 $output .= $currentPath;
 $output .= "</currentpath>\n";
-
+$output .= "<prevpath>\n";
+$output .= $prevPath;
+$output .= "</prevpath>\n";
 $output .= "<error>\n";
 $output .= "None";
 $output .= "</error>\n";
 $output .= "<message>\n";
 $output .= $message;
 $output .= "</message>\n";
+// $screen .= htmlentities(print_r($resources, true));
+*/
 $output = $screen;
+
 echo $output;
 ?>

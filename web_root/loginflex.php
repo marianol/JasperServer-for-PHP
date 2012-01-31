@@ -68,7 +68,9 @@ if(!$result) {
 		$output .= "yes";	
 	}
 $output .= "</loginsuccess>";
-
+$output .= "<username>";
+$output .= $_POST['username'];		
+$output .= "</username>";
 //output all the XML
 print ($output);
 ?>
