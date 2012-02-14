@@ -80,7 +80,7 @@ $_PageTabs = ''; // Default Tabs
 $_SiteConfig = array();
 
 $_SiteConfig['site'] = array(
-	'name'  		=> 'My PHP App',
+	'name'  		=> 'My Report App',
 	'title' 		=> 'My App',
 	'url'   		=> 'http://demo.com/',
 	'sslurl'   		=> 'https://demo.com/',
@@ -88,11 +88,11 @@ $_SiteConfig['site'] = array(
 	'keywords-extra'	=> '',
 	'description'	=> '',
 	'email'			=> 'do-not-reply@nomail.com',
-	'company' 		=> 'App Company',
+	'company' 		=> 'Jaspersoft',
 );
 
 $_SiteConfig['user_menu']  = '
-	<li ><a href="home.php">RESTFul Integration</a></li>
+	<li ><a href="home.php">RESTful Integration</a></li>
 	<li ><a href="iframe.php">iFrame Integration</a></li> 
 	<li ><a href="about.php">About</a></li> 
 	<li ><a href="logout.php">Log out</a></li> 
