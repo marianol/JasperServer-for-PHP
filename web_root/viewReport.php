@@ -45,11 +45,7 @@ $WSRest->curl_opts[CURLOPT_COOKIE] = $_SESSION["JSCookie"] ;
 try 
 {		    
 	$resource = $WSRest->get('resource' . $reportUnit);
-	//$response = $pest->post('login', $restData);
-	
-	//$screen .= "\n" . print_r($WSRest->last_response, true);
-	// Get the Datasource
-	//$resource[resourceDescriptor][wsType]
+
 	$currentReport = $reportName = $resource['name'];
 	foreach ($resource->resourceDescriptor as $contents) {
 		switch ($contents['wsType']) {

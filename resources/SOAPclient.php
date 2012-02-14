@@ -245,7 +245,7 @@ available for such deliverable(s) as "Time for Hire": http://www.jaspersoft.com/
 		}
 
 
-		$op_xml .="<argument name=\"USE_DIME_ATTACHMENTS\"><![CDATA[1]]></argument>\n";
+		//$op_xml .="<argument name=\"USE_DIME_ATTACHMENTS\"><![CDATA[1]]></argument>\n";
 
 		$op_xml .="<resourceDescriptor name=\"\" wsType=\"reportUnit\" uriString=\"$uri\" isNew=\"false\">\n".
 		"<label></label>\n";
