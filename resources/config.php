@@ -70,7 +70,14 @@ if(SSL_FORCED && $_SERVER['SERVER_PORT'] != 443) {
 
 //define('JS_WS_URL', 'http://localhost:8080/jasperserver/rest/'); // Community
 define('JS_WS_URL', 'http://localhost:8080/jasperserver-pro/rest/'); // Pro
-	
+
+/**
+ * JRS Base URL For IFRAME for this to work without exposing the authentication 
+ * Both JRS and this app should reside in the same TLD
+ */ 
+
+define('JS_IFRAME_URL', 'http://localhost:8080/jasperserver-pro/');
+
 /**
  * Main Site Configuration Array
  */

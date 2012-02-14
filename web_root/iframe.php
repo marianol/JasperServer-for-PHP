@@ -43,8 +43,8 @@ if($pos === false || $pos == 0) {
 	$parentUri = substr($currentUri, 0, $pos );
 }
 
-// Change this to fir yout needs
-$iFrameServerURI = "http://localhost:8080/jasperserver-pro/";   
+// Change this to fit yout needs
+$iFrameServerURI = JS_IFRAME_URL; // E.g.: "http://localhost:8080/jasperserver-pro/";   
 
 // This iframe uses the embed theme if the theme is not installed comment this line
 $iFrameLoginInfo = "&theme=embed"; 
