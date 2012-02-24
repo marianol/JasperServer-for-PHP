@@ -1,7 +1,7 @@
 <?php
 /**
  * login.php 
- * Show the login form and authenticate the user against JasperServer
+ * Authenticate the user against JasperServer (hardcoded in this sample)
  * I also use the JS Session ID sent from the REST Auth to set a cookie for the iframe integration
  * 
  *
@@ -24,63 +24,76 @@ available for such deliverable(s) as "Time for Hire": http://www.jaspersoft.com/
  */
 
 require_once('config.php');
-$_PageTitle = 'Login'; 
+
 
 $errorMessage = "";
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+// Initialize the REST Class
+$WSRest = new Pest(JS_WS_URL);
+$WSRest->curl_opts[CURLOPT_HEADER] = true;
 
-	$WSRest = new Pest(JS_WS_URL);
-	$WSRest->curl_opts[CURLOPT_HEADER] = true;
-	$myuserdata = explode("|", $_POST['username']);
-	if ($_POST['username'] == 'jasperadmin') {
-		$_POST['username'] = 'jasperadmin|organization_1';
+// Set the Jasperserver username and password to authenticate
+// You can change this values to any valid JRS username and password
+$myuserdata['username'] = 'jasperadmin'; // Or 'username|organization_id' for multitenant
+$myuserdata['username'] = 'jasperadmin|organization_1';
+$myuserdata['password'] = 'jasperadmin'; 
+
+$restData = array(
+  'j_username' => $myuserdata['username'],
+  'j_password' => $myuserdata['password']
+);
+
+try 
+{		    
+	$body = $WSRest->post('login', $restData);  // Call JRS Web Services to authenticate the user
+	$response = $WSRest->last_response;
+	if ($response['meta']['http_code'] == '200') {
+		// Respose code 200 -> All OK - See JasperServer WebServices Guide for a list of response codes
+		
+		// Register my own session values for later use
+		session_register("username");
+        session_register("password");
+		session_register("userlevel");
+        $_SESSION["username"]= $_POST['username'];
+        $_SESSION["password"]= $_POST['password'];
+		$_SESSION["userlevel"]= 'USER';
+		
+		/**
+		 * The Rest API will send a cookie with the JasperServer JSession Identifier
+		 * E.G.: Cookie: JSESSIONID=52E79BCEE51381DF32637EC69AD698AE; $Path=/jasperserver
+		 * For the ifram to be able to skip the JRS login, we will extract that session identifier
+		 * and place a Cookie on the user end where JRS expect that to be found.
+		 */ 
+				
+		// Grab the JS Session ID and set the cookie in the right path so 
+		// when I present an iFrame I can share be authenticated
+		// /!\ IMPORTANT: For this to work JRS and this App have to run in the same domain 
+		
+		// Extract the JSESSIONID from the Rest response body.
+		preg_match('/^Set-Cookie: (.*?)$/sm', $body, $cookie);
+		preg_match('/=(.*?);/' , $cookie[1], $cookievalue);
+		$expire_time = time() + (3600 * 3); // Match this expiration with your session and JRS session
+		setcookie('JSESSIONID', $cookievalue[1], $expire_time, "/jasperserver-pro");
+		
+		// Redirect the user to the Iframe
+        header("location: iframe.php");
+        exit();
+	} else {
+		$errorMessage = "Unauthorized Code: " . $response['meta']['http_code'];
 	}
-	$restData = array(
-	  'j_username' => $_POST['username'],
-	  'j_password' => $_POST['password']
-	);
 	
-	try 
-	{		    
-		$body = $WSRest->post('login', $restData);
-		$response = $WSRest->last_response;
-		if ($response['meta']['http_code'] == '200') {
-			// Respose code 200 -> All OK
-			session_register("username");
-	        session_register("password");
-			session_register("userlevel");
-	        $_SESSION["username"]= $_POST['username'];
-	        $_SESSION["password"]= $_POST['password'];
-			$_SESSION["userlevel"]= USER;
-			
-			//Cookie: JSESSIONID=52E79BCEE51381DF32637EC69AD698AE; $Path=/jasperserver
-			// Extract the Cookie and save the string in my session for further requests.
-			preg_match('/^Set-Cookie: (.*?)$/sm', $body, $cookie);
-			$_SESSION["JSCookie"] = '$Version=0; ' . str_replace('Path', '$Path', $cookie[1]);
-			
-			// Grab the JS Session ID and set the cookie in the right path so 
-			// when I present an iFrame I can share be authenticated
-			// For this to work JS and the App have to run in the same domain 
-			preg_match('/=(.*?);/' , $cookie[1], $cookievalue);
-			setcookie('JSESSIONID', $cookievalue[1], time() + (3600 * 3), "/jasperserver-pro");
-	        header("location: home.php");
-	        exit();
-		} else {
-			$errorMessage = "Unauthorized Code: " . $response['meta']['http_code'];
-		}
-		
-		
-	} 
-	catch (Exception $e) 
-	{
-	    $errorMessage =  "Unauthorized Exception: " .  $e->getMessage() . "<br>";
-	}
-
+	
+} 
+catch (Exception $e) 
+{
+    $errorMessage =  "Unauthorized Exception: " .  $e->getMessage() . "<br>";
 }
+
+
 
 $errorMessage = (!empty($errorMessage)) ? decorateError($errorMessage) : '';
 
+// All the HTML is down below
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
@@ -128,22 +141,13 @@ $errorMessage = (!empty($errorMessage)) ? decorateError($errorMessage) : '';
     	<h3>Welcome to MyReport</h3>
 		<div class="prepend-8 append-8 last">
 		<div class="box">
-		   <form name = 'login' action = '' method = 'POST'>
-		          <h4><img class="left" src="<?php echo WWW_ROOT; ?>images/lock.gif" alt="LOCKED" width="29" height="31" /> Login  </h4>
-					<p>Type in a JasperServer username and password (i.e. jasperadmin/jasperadmin)</p>
-					<p><label for="username">Username:&nbsp;</label>
-		            <input type = 'text' name = 'username' value="" />
-		            </p>
 					<p>
-					<label for="password">Password:&nbsp;</label>
-		            <input type = 'password' name='password' />
-		            </p>
+					 ERROR: </p> 
+					 <p>
 					<?php echo $errorMessage; ?>
+					</p>
 
-		    <button type="submit" class="button positive right">
-			  <img src="<?php echo WWW_ROOT; ?>css/blueprint/plugins/buttons/icons/tick.png" alt=""/> Login
-			</button>
-					<p class="small">You must have cookies enabled in your browser.</p>
+					<p class="small">Check login.php for a valid set of credentials and config.php to make sure that the paths are correct.</p>
 		   </form>
 		</div>
 		</div>

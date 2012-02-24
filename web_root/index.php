@@ -10,9 +10,9 @@
 
 require_once('config.php');
 
-if($_SESSION['userlevel'] >= USER) {
+if($_SESSION['userlevel'] >= 'USER') {
 	// You are already Logged in!!
-	header('Location: ' . WWW_ROOT . 'home.php');
+	header('Location: ' . WWW_ROOT . 'iframe.php');
 } else {
 	// Guest
 	header('Location: ' . WWW_ROOT . 'login.php');
