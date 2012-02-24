@@ -1,4 +1,4 @@
-JasperServer 4.5 REST Integration Sample
+JasperServer 4.5 IFRAME Integration Sample
 ========================================
 
 Requirements
@@ -6,30 +6,29 @@ Requirements
 
 * PHP version 5.3.x
 * JasperServer 4.5
-* For RESTful API: PEST (included) Rest Client (http://github.com/educoder/pest)
-* For SOAP API:  Pear SOAP client. 
-* Embed theme installed on JasperServer (included in "./resources/JS-embed-theme")
+* RESTful Wrapper (included): PEST Rest Client (http://github.com/educoder/pest)
+* Embed theme installed on JasperServer (included in "./web_root/JS-embed-theme")
 
 Instalation Instructions
 ------------------------
 
-Quick Overview
+Instalation:
 * Uncompress this folder into a path accessible to your Webserver
 * Set the Webserver Document Root: "./web_root"
-* Add "./resources/" to the include path of your PHP.ini
-* Modify "./resources/config.php" to match your JS and App instalation paths and URLs
+* Modify "./web_root/config.php" to match your JS and App instalation paths and URLs
 
-Instalation How-To:
+Instalation How-To on APache web server:
 
 Assuming that you have unzipped the file in:
 
 <myfolder>/php-sample-app/
 
 And inside that folder you have 2 folders:
-- ./resources
 - ./web-root
+- README.markdown
 
-1) in httpd.com (apache configuration file) add this:
+1) in httpd.conf (apache configuration file) add this:
+
 ---
 # Alias for PHP APP demo
 Alias /myphpapp "<myfolder>\php-sample-app\web_root\"
@@ -41,30 +40,22 @@ Alias /myphpapp "<myfolder>\php-sample-app\web_root\"
 </Directory>
 ---
 
-2) Modify the .htaccess file in web-root
-- Edit the file called htaccess-sample that is in web-root there is only one line in this file should look like this:
+2) Restart apache
 
-php_value include_path "<myfolder>\php-sample-app\resources;<myPEARinstallfolder>;."
+3) Change the paths inside ./web_app/config.php
+- Line 40: define('SITE_PATH', '/Library/WebServer/Documents/JSDemo/');
+- Line 51: define('JS_WS_URL', 'http://localhost:8080/jasperserver-pro/rest/');  // if needed
+- Line 52: define('iFrame_JS_URI', 'http://localhost:8080/jasperserver-pro/');   // if needed
 
-<myPEARinstallfolder> is your path to php-pear installation folder, this may be in a different path check your php.ini file
+4) go to: http://localhost/myphpapp and Voila!
 
-- SAVE this file as ".htaccess" note the . (dot) at the beginning. (IMPORTANT)
-
-3) Restart apache
-
-4) Change the paths inside ./resources/config.php
-- Line 49: define('SITE_PATH', '/Library/WebServer/Documents/JSDemo/');
-- Line 72: define('JS_WS_URL', 'http://localhost:8080/jasperserver-pro/rest/');  // if needed
-
-5) Change the path to JRS in  iframe.php
-- Line 47: $iFrameServerURI = "http://localhost:8080/jasperserver-pro/";
-
-6) go to: http://localhost/myphpapp and Voila!
-
-The RESTclient.php file has the imput control rendering funtions and  all the meat is in:
-- login.php (authentication)
-- home.php (repository browser)
-- viewReport.php and executeReport.php (view and execute report)
+Scipts Information
+- login.php (authentication) 
+	This files uses REST to authenticate to JRS and places the JSESSION ID cookie 
+	to allow the iframe to skip the login screen
+- iframe.php (iframe integration)
+	Here the JRS UI is integrated to the App via an Iframe, the script modifies the 
+	iframe SRC as neede to render different views
 
 
 LICENSE AND COPYRIGHT NOTIFICATION
