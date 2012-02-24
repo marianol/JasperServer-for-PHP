@@ -24,12 +24,12 @@ available for such deliverable(s) as "Time for Hire": http://www.jaspersoft.com/
 
  
 require_once('config.php');
+
 $_PageTitle = 'Integration using iframes'; 
 
 $currentUri = "/";
 $parentUri = "/";
 
-$myPath = (isset($_GET['action'])) ? urldecode($_GET['action']) : 'home';
 
 if ($_GET['uri'] != '') {
  	$currentUri = $_GET['uri'];
@@ -43,18 +43,17 @@ if($pos === false || $pos == 0) {
 	$parentUri = substr($currentUri, 0, $pos );
 }
 
-// Change this to fir yout needs
-$iFrameServerURI = "http://localhost:8080/jasperserver-pro/";   
+// Start building the iframe SRC URI
+$iFrameServerURI = iFrame_JS_URI;   
 
+// set the Theme to be used if different than the default theme
 // This iframe uses the embed theme if the theme is not installed comment this line
-$iFrameLoginInfo = "&theme=embed"; 
-
-// Check if there is a JS session cookie set if not pass the user and pass in the iframe
-// For the Session cookie to work JS and this app must be on the same domain 
-//	$iFrameLoginInfo .= "&j_username=" . $_SESSION["username"] . "&j_password=" . $_SESSION["password"] ;
+$iFrameTheme = "&theme=embed"; 
 
 $myIframeSRC = '';
-$myIframeheight = "818px";
+
+// Sent the Height of the iframe
+$myIframeheight = "718px";
 
 //Initialize tabs
 $tabArray =  array();
@@ -67,6 +66,10 @@ $tabArray[99] = '<a href="#" class="inactive">Logged as: ' . $_SESSION["username
 
 // Decorate and set active tab
 $_PageTabs = decoratePageTabs($tabArray, $myPath);
+
+// Build the path based on the current selection
+// Use the action sent in the request to construct the path
+$myPath = (isset($_GET['action'])) ? urldecode($_GET['action']) : 'home';
 
 switch ($myPath) {
 	case 'adHoc':
@@ -88,8 +91,8 @@ switch ($myPath) {
 		break;
 }
 
-
-$myIframeSRC = ($myIframeSRC == '') ? '"' . $iFrameServerURI . $iFramePath . $iFrameLoginInfo . '"' : '"' . $myIframeSRC . '"';
+// Build the full URI
+$myIframeSRC = '"' . $iFrameServerURI . $iFramePath . $iFrameTheme . '"' ;
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">

@@ -23,8 +23,7 @@ available for such deliverable(s) as "Time for Hire": http://www.jaspersoft.com/
 session_start();
 
 /* Get Required Libraries */
-require_once 'RESTclient.php';
-require_once 'functions.php';
+
 require_once 'PEST/PestXML.php'; // This is a rest wrapper library to make the REST calls to JasperRepors Web services
 
 /**
@@ -50,7 +49,8 @@ define('SITE_PATH', '/Library/WebServer/Documents/JSDemo/');
  */
 
 define('JS_WS_URL', 'http://localhost:8080/jasperserver-pro/rest/'); // Pro
-	
+define('iFrame_JS_URI', "http://localhost:8080/jasperserver-pro/"); 
+   
 /**
  * Main Site Configuration Array
  */

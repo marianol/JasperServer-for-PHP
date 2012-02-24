@@ -54,8 +54,8 @@ try
 		session_register("username");
         session_register("password");
 		session_register("userlevel");
-        $_SESSION["username"]= $_POST['username'];
-        $_SESSION["password"]= $_POST['password'];
+        $_SESSION["username"]= $myuserdata['username'];
+        // $_SESSION["password"]= $myuserdata['password'];
 		$_SESSION["userlevel"]= 'USER';
 		
 		/**
