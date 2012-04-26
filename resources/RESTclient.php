@@ -224,7 +224,7 @@ function RenderInputControl($ICResource, $dsUri) {				// Get Input Control resou
 function RestGetInputControl($inputControl, $DataSource) {
 	//GET http://localhost:8080/jasperserver/rest/resource
 	// /reports/samples/Cascading_multi_select_report_files/ 
-	// Cascading_state_multi_select?IC_GET_QUERY_DATA=/datasources/JServerJNDIDS& PL_Country_multi_select=USA&PL_Country_multi_select=Mexico
+	// Cascading_state_multi_select?IC_GET_QUERY_DATA=/datasources/JServerJNDIDS&PL_Country_multi_select=USA&PL_Country_multi_select=Mexico
 	$result = array();
 	$WSRest = new PestXML(JS_WS_URL);
 	// Set auth Header

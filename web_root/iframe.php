@@ -59,8 +59,9 @@ $myIframeheight = "818px";
 //Initialize tabs
 $tabArray =  array();
 
-$tabArray['home'] = '<a href="iframe.php" class="active">JS Home</a>';
-$tabArray['adHoc'] =  '<a href="iframe.php?action=adHoc" class="active">Ad Hoc Report</a>';
+$tabArray['home'] = '<a href="iframe.php" class="active">Home</a>';
+$tabArray['dashboard'] = '<a href="iframe.php?action=dashboard" class="active">Dashboard</a>';
+$tabArray['adHoc'] =  '<a href="iframe.php?action=adHoc" class="active">Create Ad Hoc Report</a>';
 $tabArray['repository'] = '<a href="iframe.php?action=repository" class="active">Repository View</a>';
 $tabArray['analisys'] =  '<a href="iframe.php?action=analisys" class="active">Analisys View</a>';
 $tabArray[99] = '<a href="#" class="inactive">Logged as: ' . $_SESSION["username"] . '</a>';
@@ -82,6 +83,9 @@ switch ($myPath) {
 	case 'analisys': //open an olap view
 		$iFramePath = "olap/viewOlap.html?new=true&parentFlow=searchFlow&name=%2Fsupermart%2FrevenueAndProfit%2FProfitView&ParentFolderUri=%2Fsupermart%2FrevenueAndProfit";  
 		break;
+	case 'dashboard':
+		$iFramePath = "flow.html?_flowId=dashboardRuntimeFlow&dashboardResource=%2Fsupermart%2FSupermartDashboard30";
+	break;
 	default:
 		$iFramePath = "/flow.html?_flowId=homeFlow";
 		$tab['home'] = $tabon;

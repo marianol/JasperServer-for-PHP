@@ -7,3 +7,6 @@
 .tabs {
 	font-size: .8em;
 }
+
+.span-24 {width:1224px;margin-right:0;}
+.container {width:1224px;margin:0 auto;}
