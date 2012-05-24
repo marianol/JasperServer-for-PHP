@@ -1,7 +1,7 @@
 <?php
 /**
- * home.php Main Site Page.
- * show the menu and options
+ * schedulerJob.php REST Scheduler V2
+ * Job Viewer
  *
  *
  * @author Mariano Luna
@@ -16,7 +16,7 @@ if($_SESSION['userlevel'] < USER) {
 	exit();
 } 
 
-$_PageTitle = 'Welcome ' . $_SESSION["username"] ; 
+$_PageTitle = 'Scheduler Job Viewer'; //'Welcome ' . $_SESSION["username"] ; 
 $tabArray =  array();
 $tabArray['repository'] = '<a href="home.php" class="active">Repository Browser</a>';
 $tabArray['scheduler'] = '<a href="scheduler.php" class="active">Scheduler</a>';
@@ -24,79 +24,52 @@ $tabArray[99] = '<a href="#" class="active">Logged as: ' . $_SESSION["username"]
 $_PageTabs = decoratePageTabs($tabArray, 99);
 
 $root = (isset($_GET['root'])) ? htmlentities($_GET['root']) : '/';
-$WSRest = new PestXML(JS_WS_URL);
+$WSRest = new PestXML('http://50.19.151.95/jasperserver-pro/rest_v2/'); //JS_WS_URL);
 // Set auth Header
-$WSRest->curl_opts[CURLOPT_COOKIE] = $_SESSION["JSCookie"] ;
+// @todo
+//$WSRest->curl_opts[CURLOPT_COOKIE] = $_SESSION["JSCookie"] ;
+$WSRest->setupBasicAuth('jasperadmin', 'jasperadmin');
+//$WSRest->curl_opts[CURLOPT_HTTPHEADER] = 'Authorization: Basic amFzcGVyYWRtaW46amFzcGVyYWRtaW4=';
 
-
-foreach (explode('/', $root) as $key => $items) {
-	$tempArray[] = $items;
-	if ($item == '' and $key == 0) {
-		$currentPathArray[] = '<a href="home.php">Repository</a>';
-	} else {
-		$currentPathArray[] = '<a href="home.php?root=' . implode("/", $tempArray) . '">' . ucfirst($items) . '</a>';
-	}
-}
-$currentPath = implode(" &raquo; ", $currentPathArray);
+$JobID = (isset($_GET['jobid'])) ? htmlentities($_GET['jobid']) : '';
 
 try 
 {		    
-	$resources = $WSRest->get('resources' . $root);
-	//$response = $pest->post('login', $restData);
-	
-	//$screen .= "\n" . print_r($WSRest->last_response, true);
-	$screen = '<ul>';
-	foreach ($resources->resourceDescriptor as $contents) {
-		switch ($contents['wsType']) {
-			case 'folder':
-				$screen .= '<li> <img src="'. WWW_ROOT .'images/icon-folder.png" align="absmiddle" ><a href="home.php?root=' . $contents['uriString'] . '">' . $contents->label . '</a></li>';
-			break;
-			case 'reportUnit';
-				$screen .= '<li> <img src="'. WWW_ROOT .'images/icon-edit.gif" align="absmiddle" ><a href="viewReport.php?uri=' . $contents['uriString'] . '">' . $contents->label . '</a></li>';
-			break;
-			default:
-				$screen .= '<li>' . $contents->label . ' (' . $contents['wsType'] . ')</li>';
-		}
-	    
-	}
-	$screen .= '</ul>';
+	$jobs = $WSRest->get('jobs/' . $JobID . '');
+	/*
+	 * 
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<state>
+    <nextFireTime>2012-05-25T07:18:00Z</nextFireTime>
+    <value>NORMAL</value>
+</state>
+	  * 
+     */ 
+     $dom = new DOMDocument('1.0');
+$dom->preserveWhiteSpace = false;
+$dom->formatOutput = true;
+$dom->loadXML($jobs->asXML());
+//$screen .=  $dom->saveXML();
+     $screen .= '<pre>' . htmlentities($dom->saveXML()) . '</pre>';
+	$screen .= '<table>';
+	$screen .= '<tr><td>Job ID</td><td>' . $JobID . '</td></tr>';
+    $screen .= '<tr><td>Next Fire</td><td>' . $jobs->nextFireTime . '</td></tr>';
+    $screen .= '<tr><td>Status</td><td>' . $jobs->value . '</td></tr>';
+	$screen .= '</table>';
 } 
-catch (Pest_Unauthorized $e) {
+catch (Pest_Unauthorized $e) 
+{
 	// Check for a 401 (login timed out)	
-	$WSRest->curl_opts[CURLOPT_HEADER] = true;
-	$restData = array(
-	  'j_username' => $_SESSION['username'],
-	  'j_password' => $_SESSION['password']
-	);
-	
-    try {		    
-		$body = $WSRest->post('login', $restData);
-		$response = $WSRest->last_response;
-		if ($response['meta']['http_code'] == '200') {
-			// Respose code 200 -> All OK
-			// Extract the Cookie for further requests.
-			preg_match('/^Set-Cookie: (.*?)$/sm', $body, $cookie);
-			//Cookie: $Version=0; JSESSIONID=52E79BCEE51381DF32637EC69AD698AE; $Path=/jasperserver
-			$_SESSION["JSCookie"] = '$Version=0; ' . str_replace('Path', '$Path', $cookie[1]);
-			// Reload this page.
-	        header("location: home.php");
-	        exit();
-		} else {
-			header("location: logout.php");
-			exit();
-		}
-	} 
-	catch (Exception $e) {
-	   	header("location: logout.php");
-		exit();
-	}
+	echo "Exception: Auth Failed";
+	$screen .= "\n" . print_r($WSRest->last_response, true);
 }
 catch (Exception $e) 
 {
-    $screen .=  "Exception: <pre>" .  $e->getMessage() . "</pre>";
+    $screen .=  "Other Exception: <pre>" .  $e->getMessage() . "</pre>";
+	$screen .= "\n" . print_r($WSRest->last_response, true);
 }
 
-//$screen .= htmlentities(print_r($resources, true));
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
@@ -141,8 +114,10 @@ catch (Exception $e)
 			<ul class="tabs">
 			<?php echo $_PageTabs; ?>
 			</ul> 
-    		<h3>Welcome to your repository (Using Rest Web Services)</h3>
+    		<h3>Scheduled Reports</h3>
 			<h5><?php echo $currentPath; ?></h5>
+			<form action="scheduler.php" method="GET">
+			</form>
 			<?php echo $screen; ?>
    
 		</div>
