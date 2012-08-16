@@ -1,0 +1,65 @@
+PHP REST Client
+------------
+This sample provides a library to interface with the REST API of the JasperReports Server
+
+
+Requirements
+------------
+To use the sample, you will need:
+  * Web server running PHP 5.3 or greater
+  * The PEAR package manager (http://pear.php.net)
+  * XML_Serializer PEAR package (http://pear.php.net/manual/en/package.xml.xml-serializer.php)
+  * PHPUnit PEAR package (if you intend on running the unit tests)
+  
+See the php documentation for inforation about installing pear packages.
+
+
+Installation
+------------
+Make sure you have a web-server and PHP processor installed. For simplicity it is suggested to run
+Z-WAMP (http://zwamp.sourceforge.net/). However for a more scalable solution Apache and PHP can be installed and
+configured manually.
+
+Configure 'php.ini' so that the value for 'Date.timezone' matches your location. A list of accepted values
+can be found on the PHP website. The values correlate with the universally unix accepted timezone names.
+Example: Date.timezone = "America/Los_Angeles"
+
+Install PEAR and use it to install the XML_Serializer package `pear install -f XML_Serializer`
+
+
+Security Notice
+------------
+This package uses BASIC authentication to identify with the server. Usernames and passwords are sent in clear text
+and should only be done over a connection that is trusted between the client and the server.
+
+
+PHPUnits
+------------
+The PHPUnits are provided as an example of how to make requests using this wrapper. They can be valuable not only for testing the integrity
+of the package, but also for learning how the functions are used within the package.
+
+When executing the PHPUnit program, you can point to the phpunit/ directory in the package folder. This will run all the tests. You can also 
+provide a path to a single test file to run only the tests in that file.
+
+The PHPUnits are configurable to your specific environment by editing the test.properties file located in the phpunit/ folder of this package.
+
+In order to run PHP Units you will need to install and configure the package. Follow refer to: http://www.phpunit.de/manual/3.0/en/installation.html
+for a better understanding of how to install this package.
+
+Before running the tests, it is suggested you disable E_STRICT error reporting in the php.ini file. This can be done by editing the error_reporting variable from "E_ALL | E_STRICT" to just
+"E_ALL" unfortunately there are deprecation errors in the XML_Serializer dependency which causes tests to fail, this adjustment will fix that.
+
+
+Visual PHP Units
+------------
+Included in the vpu/ folder is a Visual PHPUnit tool built by Nick Sinopoli. Using this tool you can see visual representations of the PHPUnit tests when they are ran.
+
+In order to use this package, you must edit the file vpu/app/config/bootstrap.php and configure the required variables. 
+
+You must set pear_path to point to the folder of your PEAR installation, as well as the test_directory to point to where the PHPUnit tests are. If you leave the package folder structure
+in place you will not have to edit the test_directory variable.
+
+You also must have mod_rewrite enabled on your server if it is Apache, or if you are using a different web server, you will need to configure redirects as explained on the
+VisualPHPUnit project page: https://github.com/NSinopoli/VisualPHPUnit
+
+This tool is accesible through a web-browser

@@ -1,0 +1,11 @@
+
+try {
+   $jobs = $client->getJobs('dailyReport', true);	// can also use a URI... i.e: $client->getJobs('/reports/samples/AllAccounts');
+   if(count($jobs) >= 1) {
+      foreach($jobs as $job) {
+         printf('Job Name: %s<br />Job ID: %s<br /><br />', $job->getLabel(), $job->getId());
+      }
+   }
+} catch (Exception $e) {	// Note an exception will be thrown if there are no jobs (No content)
+   printf('Requesting scheduled jobs failed: %s', $e->getMessage());
+}

@@ -1,0 +1,8 @@
+
+$organization_to_remove = $client->getOrganization('test_organization');
+
+try {
+   $client->deleteOrganization($organization_to_remove);
+} catch (Exception $e) {
+   printf('Organization deletion failure: %s', $e->getMessage());
+}
