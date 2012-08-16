@@ -1,14 +1,18 @@
 JasperServer 4.5 REST Integration Sample
 ========================================
 
+Author Mariano Luna
+
 Requirements
 ------------
 
 * PHP version 5.3.x
-* JasperServer 4.5
-* For RESTful API: PEST (included) Rest Client (http://github.com/educoder/pest)
+* JasperServer 4.5 or 4.7
 * For SOAP API:  Pear SOAP client. 
 * Embed theme installed on JasperServer (included in "./resources/JS-embed-theme")
+* For RESTful API: PEST (included in this code) Rest Client (http://github.com/educoder/pest)
+* built using Bluprint CSS (http://www.blueprintcss.org/)
+
 
 Instalation Instructions
 ------------------------
