@@ -13,7 +13,7 @@
 		}
 	}
 	
-	public function createNewUser($data) {
+	function createNewUser($data) {
 		$newUser = new Jasper\User($data['username'], $data['password'], $data['email'], 'New User', 'organization_1', array('externallyDefined' => 'false', 'role' => 'ROLE_USER'), 'true', 'false');
 		$jc->putUsers($newUser);
 	}
