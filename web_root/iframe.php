@@ -61,6 +61,8 @@ $tabArray =  array();
 
 $tabArray['home'] = '<a href="iframe.php" class="active">Home</a>';
 $tabArray['dashboard'] = '<a href="iframe.php?action=dashboard" class="active">Dashboard</a>';
+//http://localhost:8080/jasperserver-pro/flow.html?_flowId=viewReportFlow&standAlone=true&_flowId=viewReportFlow&ParentFolderUri=%2Forganizations%2Forganization_1%2Freports%2Finteractive&reportUnit=%2Forganizations%2Forganization_1%2Freports%2Finteractive%2FCascading_Report_2_Updated
+$tabArray['report'] =  '<a href="iframe.php?action=report" class="active">View Reports</a>';
 $tabArray['adHoc'] =  '<a href="iframe.php?action=adHoc" class="active">Create Ad Hoc Report</a>';
 $tabArray['repository'] = '<a href="iframe.php?action=repository" class="active">Repository View</a>';
 $tabArray['analisys'] =  '<a href="iframe.php?action=analisys" class="active">Analisys View</a>';
@@ -83,11 +85,16 @@ switch ($myPath) {
 	case 'analisys': //open an olap view
 		$iFramePath = "olap/viewOlap.html?new=true&parentFlow=searchFlow&name=%2Fsupermart%2FrevenueAndProfit%2FProfitView&ParentFolderUri=%2Fsupermart%2FrevenueAndProfit";  
 		break;
+case 'report':
+        $iFramePath = "flow.html?_flowId=viewReportFlow&standAlone=true&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2Finteractive&reportUnit=%2Freports%2Finteractive%2FCascading_Report_2_Updated";
+break;
 	case 'dashboard':
 		$iFramePath = "flow.html?_flowId=dashboardRuntimeFlow&dashboardResource=%2Fsupermart%2FSupermartDashboard30";
 	break;
 	default:
 		$iFramePath = "/flow.html?_flowId=homeFlow";
+		// Use Library
+		$iFramePath = "/flow.html?_flowId=searchFlow&mode=library";
 		$tab['home'] = $tabon;
 		break;
 }
