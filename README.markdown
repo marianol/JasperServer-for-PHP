@@ -101,7 +101,6 @@ All the external libraries are included in this sample, check each library folde
 LICENSE AND COPYRIGHT NOTIFICATION
 ==================================
 
-
  Copyright (C) 2005 - 2012 Jaspersoft Corporation. All rights reserved.
  http://www.jaspersoft.com.
 
@@ -120,4 +119,3 @@ LICENSE AND COPYRIGHT NOTIFICATION
 
  You should have received a copy of the GNU Affero General Public  License
  along with this program. If not, see <http://www.gnu.org/licenses/>.
-
