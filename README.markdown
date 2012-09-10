@@ -74,13 +74,23 @@ The RESTclient.php file has the imput control rendering funtions and  all the me
 LICENSE AND COPYRIGHT NOTIFICATION
 ==================================
 
-The Proof of Concept deliverable(s) are (c) 2011 Jaspersoft Corporation - All rights reserved. 
-Jaspersoft grants to you a non-exclusive, non-transferable, royalty-free license to use the deliverable(s) pursuant to 
-the applicable evaluation license agreement (or, if you later purchase a subscription, the applicable subscription 
-agreement) relating to the Jaspersoft software product at issue. 
 
-The Jaspersoft Sales department provides the Proof of Concept deliverable(s) "AS IS" and WITHOUT A WARRANTY OF ANY KIND. 
-It is not covered by any Jaspersoft Support agreement or included in any Professional Services offering. 
-At the discretion of the head of the Jaspersoft Professional Services team, support, maintenance and enhancements may be 
-available for such deliverable(s) as "Time for Hire": http://www.jaspersoft.com/time-for-hire.
+ Copyright (C) 2005 - 2012 Jaspersoft Corporation. All rights reserved.
+ http://www.jaspersoft.com.
+
+ Unless you have purchased a commercial license agreement from Jaspersoft,
+ the following license terms apply:
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as
+ published by the Free Software Foundation, either version 3 of the
+ License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU Affero  General Public License for more details.
+
+ You should have received a copy of the GNU Affero General Public  License
+ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
