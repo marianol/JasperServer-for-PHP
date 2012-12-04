@@ -54,16 +54,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	        $_SESSION["password"]= $_POST['password'];
 			$_SESSION["userlevel"]= USER;
 			
-			//Cookie: JSESSIONID=52E79BCEE51381DF32637EC69AD698AE; $Path=/jasperserver
+			// Cookie: JSESSIONID=52E79BCEE51381DF32637EC69AD698AE; $Path=/jasperserver
+			/* 
+             * array(2) {
+			     [0]=> string(86) "Set-Cookie: JSESSIONID=9E78606E2B3190ADA6B0E4EF920F6FEE; Path=/emerald-pro/; HttpOnly " 
+			     [1]=> string(74) "JSESSIONID=9E78606E2B3190ADA6B0E4EF920F6FEE; Path=/emerald-pro/; HttpOnly " } 
+            */
 			// Extract the Cookie and save the string in my session for further requests.
 			preg_match('/^Set-Cookie: (.*?)$/sm', $body, $cookie);
+
 			$_SESSION["JSCookie"] = '$Version=0; ' . str_replace('Path', '$Path', $cookie[1]);
 			
 			// Grab the JS Session ID and set the cookie in the right path so 
 			// when I present an iFrame I can share be authenticated
 			// For this to work JS and the App have to run in the same domain 
-			preg_match('/=(.*?);/' , $cookie[1], $cookievalue);
-			setcookie('JSESSIONID', $cookievalue[1], time() + (3600 * 3), "/jasperserver-pro");
+			
+			preg_match_all('/=(.*?);/' , $cookie[1], $cookievalue);
+			setcookie('JSESSIONID', $cookievalue[1][0], time() + (3600 * 3), $cookievalue[1][1]);
+
 	        header("location: iframe.php");
 	        exit();
 		} else {

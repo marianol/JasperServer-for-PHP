@@ -67,16 +67,17 @@ if(SSL_FORCED && $_SERVER['SERVER_PORT'] != 443) {
  * * see iframe.php
  */
 
+ define('JRS_BASE_URL', 'http://localhost:8080/emerald-pro/'); // Pro
+//define('JS_WS_URL', 'http://localhost:8080/jasperserver'); // Community
 
-//define('JS_WS_URL', 'http://localhost:8080/jasperserver/rest/'); // Community
-define('JS_WS_URL', 'http://localhost:8080/jasperserver-pro/rest/'); // Pro
-
+ define('JS_WS_URL', JRS_BASE_URL . 'rest/');
+ define('JS_REST_URL', JRS_BASE_URL . 'rest_v2/');
 /**
  * JRS Base URL For IFRAME for this to work without exposing the authentication 
  * Both JRS and this app should reside in the same TLD
  */ 
 
-define('JS_IFRAME_URL', 'http://localhost:8080/jasperserver-pro/');
+define('JS_IFRAME_URL', JRS_BASE_URL );
 
 /**
  * Main Site Configuration Array
