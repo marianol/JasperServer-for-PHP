@@ -1,0 +1,16 @@
+
+$californiaUser = $client->getUsers('CaliforniaUser');
+
+if (count($californiaUser) == 1) {
+
+  $californiaUser->setEmailAddress('sanfrancisco-pasadena@example.com');
+  $californiaUser->setPassword('SUPERstrongPASSWORD###!!!');
+
+  try {
+     $client->postUser($californiaUser);
+  } catch (Exception $e) {
+      printf('Attempt to modify the user failed with error: %s', $e->getMessage());
+  }
+} else {
+  printf('More than one user found. Please be more specific with your query.');
+}

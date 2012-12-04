@@ -1,0 +1,26 @@
+php-rest-sample
+-----------
+This sample provides a library to interface with the REST API.
+
+
+Requirements
+-----------
+To use the sample, you will need:
+  * Web server running PHP 5.3
+  * XML_Serializer PEAR package (http://pear.php.net/manual/en/package.xml.xml-serializer.php)
+
+See the php documentation for inforation about installing pear packages.
+
+
+Installation
+------------
+Make sure you have a web-server and PHP processor installed. For simplicity it is suggested to run
+Z-WAMP (http://zwamp.sourceforge.net/). However for a more scalable solution Apache and PHP can be installed and
+configured manually.
+
+Configure 'php.ini' so that the value for `Date.timezone` matches your location. A list of accepted values
+can be found on the PHP website. The values correlate with the universally unix accepted timezone names.
+Example: Date.timezone = "America/Los_Angeles"
+
+Install PEAR and use it to install the XML_Serializer package `pear install -f XML_Serializer`
+

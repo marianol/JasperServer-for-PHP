@@ -1,0 +1,13 @@
+
+try {
+   $job = $client->getJobs('dailyReport', true);
+   $job_id = $job[0]->getId();
+   $job_label = $job[0]->getLabel();
+   if ($client->resumeJob($job_id)) {
+      printf('Successfully resumed job: %s (name: %s)', $job_id, $job_label);
+   } else {
+      printf('Error resuming job: %s (name: %s)', $job_id, $job_label);
+   }
+} catch (Exception $e) {
+   printf('Unable to resume job. Error: %s', $e->getMessage());
+}

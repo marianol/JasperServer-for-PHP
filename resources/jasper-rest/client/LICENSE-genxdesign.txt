@@ -1,0 +1,6 @@
+Sample code for the REST restful requests taken and slightly modified from the location below.
+
+
+Ian Selby is the original author:
+http://www.gen-x-design.com/archives/making-restful-requests-in-php/ 
+http://www.gen-x-design.com/

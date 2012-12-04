@@ -1,0 +1,7 @@
+
+$state_attribute = new Jasper\Attribute('State', 'Oklahoma');
+$city_attribute = new Jasper\Attribute('Cities', 'Norman, Tulsa, Stillwater');
+$attributes_to_add = array($state_attribute, $city_attribute);
+
+$user = $client->getUsers('intern_developer');	// a user object is required to be passed to the attribute function
+$client->postAttributes($user, $attributes_to_add);

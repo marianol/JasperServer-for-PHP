@@ -8,7 +8,8 @@ Requirements
 
 * PHP version 5.3.x
 * JasperServer 4.5 or 4.7
-* For SOAP API:  Pear SOAP client. 
+* The PEAR package manager (http://pear.php.net)
+  * XML_Serializer PEAR package (http://pear.php.net/manual/en/package.xml.xml-serializer.php) 
 * Embed theme installed on JasperServer (included in "./resources/JS-embed-theme")
 * For RESTful API: PEST (included in this code) Rest Client (http://github.com/educoder/pest)
 * built using Bluprint CSS (http://www.blueprintcss.org/)

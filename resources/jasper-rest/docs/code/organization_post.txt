@@ -1,0 +1,10 @@
+
+$organization = $client->getOrganization('test_organization');
+$organization->setTenantDesc('An organization not yet ready for the world.');
+
+try {
+   $client->postOrganization($organization);
+} catch (Exception $e) {
+   printf('Unable to modify organization: %s', $e->getMessage());
+}
+

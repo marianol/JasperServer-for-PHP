@@ -1,0 +1,14 @@
+
+try {
+   $jobs = $client->getJobs('jobName', true);	// request job by label
+   if (count($jobs) > 1) {
+      echo "More than one job found, be more specific.";
+   }
+   else {
+      if($client->deleteJob($jobs[0]->getId())) {
+	printf('Deleting job: %s (Job ID: %s) was successful!', $jobs[0]->getLabel(), $jobs[0]->getId());
+      }  
+   }
+} catch (Exception $e) {
+   printf('Deleting a job failed: %s', $e->getMessage());
+}

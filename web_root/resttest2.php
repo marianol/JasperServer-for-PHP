@@ -19,7 +19,11 @@ The Jaspersoft Sales department provides the Proof of Concept deliverable(s) "AS
 It is not covered by any Jaspersoft Support agreement or included in any Professional Services offering. 
 At the discretion of the head of the Jaspersoft Professional Services team, support, maintenance and enhancements may be 
 available for such deliverable(s) as "Time for Hire": http://www.jaspersoft.com/time-for-hire.
-
+"The views and opinions expressed in any of the IAPG Houston Inc. Forums are those of the individual presenter and should 
+ * not be attributed to the IAPG Houston Inc., its directors, volunteers, members committees,
+councils, or any organization with which the IAPG Houston directors,
+volunteers or members are related. Any question related to the
+specific subject of the Forum should be directed to the individual presenter or his/her affiliated company or organization."
  */
 
 require_once('config.php');

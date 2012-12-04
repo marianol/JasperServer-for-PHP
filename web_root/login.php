@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			// For this to work JS and the App have to run in the same domain 
 			preg_match('/=(.*?);/' , $cookie[1], $cookievalue);
 			setcookie('JSESSIONID', $cookievalue[1], time() + (3600 * 3), "/jasperserver-pro");
-	        header("location: home.php");
+	        header("location: iframe.php");
 	        exit();
 		} else {
 			$errorMessage = "Unauthorized Code: " . $response['meta']['http_code'];
