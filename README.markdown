@@ -1,19 +1,26 @@
 JasperServer REST Integration Sample
 ========================================
 
+https://github.com/marianol/JasperServer-for-PHP/
+
 Author Mariano Luna
 
-Version 1.0
+Version 1.1
 
 Requirements
 ------------
 
 * PHP version 5.3.x
-* JasperServer 4.5 or 4.7+ 
+* JasperServer 4.5 or > 4.7 installed in the same domian
 * The PEAR package manager (http://pear.php.net)
   * XML_Serializer PEAR package (http://pear.php.net/manual/en/package.xml.xml-serializer.php) 
 * Embed theme installed on JasperServer (included in "./resources/JS-embed-theme") for Jasper Server version 4.5 use embed-4.5.zip and for version 4.7 or 5.0 use embed-4.7.zip 
 
+Usage
+-----
+
+* For samples using the REST API check the "Web Services Integration" tab
+* For samples using iFrames and full UI integration check the "Jasper UI Integration" tab
 
 Instalation Instructions
 ------------------------
@@ -24,6 +31,7 @@ Quick Overview
 * Set the Webserver Document Root: "./web_root"
 * Add "./resources/" to the include path of your PHP.ini
 * Modify "./resources/config.php" to match your JS and App instalation paths and URLs
+* For the SSO integration implemented in this sample to work, Jasper and this sample must be in the same domain 
 
 ### Instalation Step by Step How-To
 
