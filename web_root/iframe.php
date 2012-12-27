@@ -54,7 +54,7 @@ $iFrameLoginInfo = "&theme=embed";
 //	$iFrameLoginInfo .= "&j_username=" . $_SESSION["username"] . "&j_password=" . $_SESSION["password"] ;
 
 $myIframeSRC = '';
-$myIframeheight = "800px";
+$myIframeheight = "600px";
 
 //Initialize tabs
 $tabArray =  array();
@@ -90,7 +90,7 @@ switch ($myPath) {
         $iFramePath = "flow.html?_flowId=viewReportFlow&standAlone=true&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2Finteractive&reportUnit=%2Freports%2Finteractive%2FCascading_Report_2_Updated";
     break;
 	case 'dashboard':
-		$iFramePath = "flow.html?_flowId=dashboardRuntimeFlow&dashboardResource=%2Fsupermart%2FSupermartDashboard30";
+		$iFramePath = "flow.html?_flowId=dashboardRuntimeFlow&dashboardResource=%2Fpublic%2FSamples%2FDashboards%2FSupermartDashboard";
 	break;
     case 'library':
         // Use Library
