@@ -3,27 +3,9 @@
  * @copyright Copyright (c) 2011
  * @author Mariano Luna
  * 
-LICENSE AND COPYRIGHT NOTIFICATION
-==================================
-
-The Proof of Concept deliverable(s) are (c) 2011 Jaspersoft Corporation - All rights reserved. 
-Jaspersoft grants to you a non-exclusive, non-transferable, royalty-free license to use the deliverable(s) pursuant to 
-the applicable evaluation license agreement (or, if you later purchase a subscription, the applicable subscription 
-agreement) relating to the Jaspersoft software product at issue. 
-
-The Jaspersoft Sales department provides the Proof of Concept deliverable(s) "AS IS" and WITHOUT A WARRANTY OF ANY KIND. 
-It is not covered by any Jaspersoft Support agreement or included in any Professional Services offering. 
-At the discretion of the head of the Jaspersoft Professional Services team, support, maintenance and enhancements may be 
-available for such deliverable(s) as "Time for Hire": http://www.jaspersoft.com/time-for-hire.
-
+ * License: See https://github.com/marianol/JasperServer-for-PHP/blob/master/README.markdown 
  */
 // Define Type Constants
-	$jasperserver_url = "http://localhost:8080/jasperserver/services/";
-
-	$jasperserver_url = "http://localhost:8080/jasperserver-pro/services/";
-
-	$SCHEDULING_WS_URI =  $jasperserver_url . "ReportScheduler?wsdl";
-        $webservices_uri = $jasperserver_url . "repository";
 
 	$namespace = "http://www.jaspersoft.com/namespaces/php";
 
