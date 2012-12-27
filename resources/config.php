@@ -67,7 +67,7 @@ if(SSL_FORCED && $_SERVER['SERVER_PORT'] != 443) {
  * * see iframe.php
  */
 
- define('JRS_BASE_URL', 'http://localhost:8080/emerald-pro/'); // Pro
+ define('JRS_BASE_URL', 'http://localhost:8080/jasperserver-pro/'); // Pro
 //define('JS_WS_URL', 'http://localhost:8080/jasperserver'); // Community
 
  define('JS_WS_URL', JRS_BASE_URL . 'rest/');
