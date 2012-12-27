@@ -7,54 +7,34 @@
  * @copyright Copyright (c) 2011
  * @author Mariano Luna
  * 
-LICENSE AND COPYRIGHT NOTIFICATION
-==================================
-
-The Proof of Concept deliverable(s) are (c) 2011 Jaspersoft Corporation - All rights reserved. 
-Jaspersoft grants to you a non-exclusive, non-transferable, royalty-free license to use the deliverable(s) pursuant to 
-the applicable evaluation license agreement (or, if you later purchase a subscription, the applicable subscription 
-agreement) relating to the Jaspersoft software product at issue. 
-
-The Jaspersoft Sales department provides the Proof of Concept deliverable(s) "AS IS" and WITHOUT A WARRANTY OF ANY KIND. 
-It is not covered by any Jaspersoft Support agreement or included in any Professional Services offering. 
-At the discretion of the head of the Jaspersoft Professional Services team, support, maintenance and enhancements may be 
-available for such deliverable(s) as "Time for Hire": http://www.jaspersoft.com/time-for-hire.
-
+ * License: See https://github.com/marianol/JasperServer-for-PHP/blob/master/README.markdown 
  */
 
- 
 require_once('config.php');
-$_PageTitle = 'Integration using iframes'; 
+$_PageTitle = 'JRS UI Integration'; 
 
-$currentUri = "/";
-$parentUri = "/";
+$default_tab = 'library'; // set the default tab
 
-$myPath = (isset($_GET['action'])) ? urldecode($_GET['action']) : 'dashboard';
+// Which tab?
+$myPath = (isset($_GET['action'])) ? urldecode($_GET['action']) : $default_tab;
 
-if ($_GET['uri'] != '') {
- 	$currentUri = $_GET['uri'];
-}
-   
-$pos = strrpos($currentUri, "/");
+// Set the Height of the iFrame in px
+$iFrameHeight = "600px";
 
-if($pos === false || $pos == 0) {
-	$parentUri="/";
-} else {
-	$parentUri = substr($currentUri, 0, $pos );
-}
-
-// Change this to fit yout needs
-$iFrameServerURI = JS_IFRAME_URL; // E.g.: "http://localhost:8080/jasperserver-pro/";   
-
-// This iframe uses the embed theme if the theme is not installed comment this line
-$iFrameLoginInfo = "&theme=embed"; 
+// This iframe uses the embed theme (see README.markdown) to cleanup the Jasper UI for embedding
+$iFrameAttributes = "&theme=embed"; 
 
 // Check if there is a JS session cookie set if not pass the user and pass in the iframe
 // For the Session cookie to work JS and this app must be on the same domain 
-//	$iFrameLoginInfo .= "&j_username=" . $_SESSION["username"] . "&j_password=" . $_SESSION["password"] ;
-
-$myIframeSRC = '';
-$myIframeheight = "600px";
+/*
+ * This sample uses the REST login cookie to authenticate against JRS (see login.php) so there
+ * is no need to pass credentials to Jasper Server.
+ * For this to work this Sample and Jasper Server must be installed in the same domain (e.g. localhost or mydomain.com)
+ * If that is not the case, you will need to implement an SSO between this application and JasperServer
+ * you can also pass the Login credentials in the URL to test this functionality (just uncomment the following line) 
+ */
+ 
+//	$iFrameAttributes .= "&j_username=" . $_SESSION["username"] . "&j_password=" . $_SESSION["password"] ;
 
 //Initialize tabs
 $tabArray =  array();
@@ -62,15 +42,12 @@ $tabArray =  array();
 $tabArray['home'] = '<a href="iframe.php" class="active">Home</a>';
 $tabArray['library'] = '<a href="iframe.php?action=library" class="active">Report Library</a>';
 $tabArray['dashboard'] = '<a href="iframe.php?action=dashboard" class="active">Dashboard</a>';
-//http://localhost:8080/jasperserver-pro/flow.html?_flowId=viewReportFlow&standAlone=true&_flowId=viewReportFlow&ParentFolderUri=%2Forganizations%2Forganization_1%2Freports%2Finteractive&reportUnit=%2Forganizations%2Forganization_1%2Freports%2Finteractive%2FCascading_Report_2_Updated
 $tabArray['report'] =  '<a href="iframe.php?action=report" class="active">Foodmart Report</a>';
 $tabArray['adHoc'] =  '<a href="iframe.php?action=adHoc" class="active">Create Ad Hoc Report</a>';
 $tabArray['repository'] = '<a href="iframe.php?action=repository" class="active">Repository View</a>';
 $tabArray['analisys'] =  '<a href="iframe.php?action=analisys" class="active">Analisys View</a>';
 $tabArray[99] = '<a href="#" class="inactive">Logged as: ' . $_SESSION["username"] . '</a>';
 
-// Decorate and set active tab
-$_PageTabs = decoratePageTabs($tabArray, $myPath);
 
 switch ($myPath) {
 	case 'adHoc':
@@ -99,12 +76,13 @@ switch ($myPath) {
 	default:
 		$iFramePath = "/flow.html?_flowId=homeFlow";
 
-		$tab['home'] = $tabon;
+		$myPath = 'home';
 		break;
 }
+// Decorate and set active tab
+$_PageTabs = decoratePageTabs($tabArray, $myPath);
 
-
-$myIframeSRC = ($myIframeSRC == '') ? '"' . $iFrameServerURI . $iFramePath . $iFrameLoginInfo . '"' : '"' . $myIframeSRC; // . '&j_username=jasperadmin&j_password=jasperadmin"';
+$iFrameSRC = '"' . JS_IFRAME_URL . $iFramePath . $iFrameAttributes . '"'; // Build the iFrame SRC URL
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -151,7 +129,7 @@ $myIframeSRC = ($myIframeSRC == '') ? '"' . $iFrameServerURI . $iFramePath . $iF
 			<?php echo $_PageTabs; ?>
 			</ul> 
 <!-- JasperServer Embed -->
-<iframe src=<?php echo $myIframeSRC; ?> height="<?php echo $myIframeheight; ?>" width="100%" marginheight="0" frameborder="0" scrolling="no"></iframe>
+<iframe src=<?php echo $iFrameSRC; ?> height="<?php echo $iFrameHeight; ?>" width="100%" marginheight="0" frameborder="0" scrolling="no"></iframe>
    
 		</div>
 		<div id="footer" class="span-16"> 

@@ -20,6 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	$WSRest = new Pest(JS_WS_URL);
 	$WSRest->curl_opts[CURLOPT_HEADER] = true;
 	
+    // Check for organization to build the proper login, REST expects the j_username to be <username>|<organizationID>
 	if ($_POST['username'] == 'superuser') {
 	    // Superuser logging in do not use organization
         $j_username = $_POST['username'];
@@ -31,14 +32,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	    $_POST['org'] = 'organization_1';
         $j_username = $_POST['username'] . '|' . $_POST['org'];
 	}
-	$restData = array(
+	$PostBody = array(
 	  'j_username' => $j_username,
 	  'j_password' => $_POST['password']
 	);
 	
 	try 
 	{		    
-		$body = $WSRest->post('login', $restData);
+		$body = $WSRest->post('login', $PostBody);
 		$response = $WSRest->last_response;
 		if ($response['meta']['http_code'] == '200') {
 			// Respose code 200 -> All OK login succeded
@@ -57,7 +58,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			// For this to work JS and the App have to run in the same domain 
 			
 			preg_match_all('/=(.*?);/' , $cookie[1], $cookievalue);
-			setcookie('JSESSIONID', $cookievalue[1][0], time() + (3600 * 3), $cookievalue[1][1]);
+            $JRSSessionID = $cookievalue[1][0];
+            $JRSPath = $cookievalue[1][1];
+            $_SESSION["JRSSessionID"] = $JRSSessionID;
+            $_SESSION["JRSPath"] = $JRSPath;
+			setcookie('JSESSIONID', $JRSSessionID , time() + (3600 * 3), $JRSPath);
             // redirect to the about page
 	        header("location: about.php");
 	        exit();

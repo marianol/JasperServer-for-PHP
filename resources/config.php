@@ -86,7 +86,7 @@ $_SiteConfig['site'] = array(
 
 $_SiteConfig['user_menu']  = '
 	<li ><a href="home.php">Web Services Integration</a></li>
-	<li ><a href="iframe.php">iFrame Integration</a></li> 
+	<li ><a href="iframe.php">Jasper UI Integration</a></li> 
 	<li ><a href="about.php">About</a></li> 
 	<li ><a href="logout.php">Log out</a></li> 
 ';

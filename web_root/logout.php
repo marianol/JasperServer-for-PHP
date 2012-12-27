@@ -9,9 +9,11 @@
  */
 
 require_once('config.php');
+// Delete JRS session
+setcookie('JSESSIONID', '', time() - 1000, $_SESSION["JRSPath"] );
+// Destroy my session
 session_unset();
 session_destroy();
-setcookie('JSESSIONID', $cookievalue[1], time() - 1000, "/jasperserver-pro");
-header('Location: ' . WWW_ROOT );
 
+header('Location: ' . WWW_ROOT );
 ?>
