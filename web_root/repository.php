@@ -118,7 +118,7 @@ $screen .= '</ul>';
 			<ul class="tabs">
 			<?php echo $_PageTabs; ?>
 			</ul> 
-    		<h3>Welcome to your repository (Using Rest Web Services)</h3>
+    		<h3>Welcome to your Report Repository</h3>
 			<h5><?php echo $currentPath; ?></h5>
 			<?php echo $screen; ?>
    
@@ -127,7 +127,7 @@ $screen .= '</ul>';
 			<!-- Footer Links -->
 		</div> 
 		<div class="alt span-7 last">
-			<a href="http://www.jaspersoft.com">Jaspersoft.com</a>
+			<a href="http://www.jaspersoft.com">My Reporting Appication</a>
 		</div>
 </div>
     </body>
