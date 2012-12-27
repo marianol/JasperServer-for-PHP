@@ -87,12 +87,13 @@ $_SiteConfig['site'] = array(
 $_SiteConfig['user_menu']  = '
 	<li ><a href="home.php">Web Services Integration</a></li>
 	<li ><a href="iframe.php">Jasper UI Integration</a></li> 
-	<li ><a href="about.php">About</a></li> 
+	<li ><a href="PHP-CLass-Docs.php">JasperReports Wrapper Docs</a></li>
+	<li ><a href="about.php">About this Sample</a></li> 
 	<li ><a href="logout.php">Log out</a></li> 
 ';
 $_SiteConfig['guest_menu']  = '
 	<li ><a href="login.php">Login</a></li>
-	<li ><a href="about.php">About</a></li> 
+	<li ><a href="about.php">About this Sample</a></li> 
 ';
 $_SiteConfig['notifyemails'] = array(
 	'Administrator'			=> 'admin@nomail.com',
