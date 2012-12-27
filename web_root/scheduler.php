@@ -24,11 +24,12 @@ $tabArray[99] = '<a href="#" class="active">Logged as: ' . $_SESSION["username"]
 $_PageTabs = decoratePageTabs($tabArray, 99);
 
 $root = (isset($_GET['root'])) ? htmlentities($_GET['root']) : '/';
-$WSRest = new PestXML('http://50.19.151.95/jasperserver-pro/rest_v2/'); //JS_WS_URL);
+$WSRest = new PestXML(JS_REST_URL); //JS_WS_URL);
 // Set auth Header
 // @todo
-//$WSRest->curl_opts[CURLOPT_COOKIE] = $_SESSION["JSCookie"] ;
-$WSRest->setupBasicAuth('jasperadmin', 'jasperadmin');
+$WSRest->curl_opts[CURLOPT_COOKIE] = $_SESSION["JSCookie"] ;
+
+// $WSRest->setupBasicAuth('jasperadmin', 'jasperadmin');
 //$WSRest->curl_opts[CURLOPT_HTTPHEADER] = 'Authorization: Basic amFzcGVyYWRtaW46amFzcGVyYWRtaW4=';
 
 $sortOptions = array(

@@ -24,12 +24,12 @@ $tabArray[99] = '<a href="#" class="active">Logged as: ' . $_SESSION["username"]
 $_PageTabs = decoratePageTabs($tabArray, 99);
 
 $root = (isset($_GET['root'])) ? htmlentities($_GET['root']) : '/';
-$WSRest = new PestXML('http://50.19.151.95/jasperserver-pro/rest_v2/'); //JS_WS_URL);
+$WSRest = new PestXML(JS_REST_URL); //JS_WS_URL);
 // Set auth Header
 // @todo
-//$WSRest->curl_opts[CURLOPT_COOKIE] = $_SESSION["JSCookie"] ;
-$WSRest->setupBasicAuth('jasperadmin', 'jasperadmin');
-//$WSRest->curl_opts[CURLOPT_HTTPHEADER] = 'Authorization: Basic amFzcGVyYWRtaW46amFzcGVyYWRtaW4=';
+$WSRest->curl_opts[CURLOPT_COOKIE] = $_SESSION["JSCookie"] ;
+// $WSRest->setupBasicAuth('jasperadmin', 'jasperadmin');
+// $WSRest->curl_opts[CURLOPT_HTTPHEADER] = 'Authorization: Basic amFzcGVyYWRtaW46amFzcGVyYWRtaW4=';
 
 $JobID = (isset($_GET['jobid'])) ? htmlentities($_GET['jobid']) : '';
 
@@ -50,12 +50,14 @@ $dom->preserveWhiteSpace = false;
 $dom->formatOutput = true;
 $dom->loadXML($jobs->asXML());
 //$screen .=  $dom->saveXML();
-     $screen .= '<pre>' . htmlentities($dom->saveXML()) . '</pre>';
+   
 	$screen .= '<table>';
 	$screen .= '<tr><td>Job ID</td><td>' . $JobID . '</td></tr>';
-    $screen .= '<tr><td>Next Fire</td><td>' . $jobs->nextFireTime . '</td></tr>';
-    $screen .= '<tr><td>Status</td><td>' . $jobs->value . '</td></tr>';
+    $screen .= '<tr><td>Job Name</td><td>' . $jobs->label . '</td></tr>';
+    $screen .= '<tr><td>Report URI</td><td>' . $jobs->source->reportUnitURI . '</td></tr>';
 	$screen .= '</table>';
+     $screen .= '<hr><p>Server XML Response</p>';
+     $screen .= '<pre>' . htmlentities($dom->saveXML()) . '</pre>';
 } 
 catch (Pest_Unauthorized $e) 
 {
