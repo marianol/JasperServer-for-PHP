@@ -7,20 +7,7 @@
  *
  * @copyright Copyright (c) 2011
  * @author Mariano Luna
- * 
-LICENSE AND COPYRIGHT NOTIFICATION
-==================================
-
-The Proof of Concept deliverable(s) are (c) 2011 Jaspersoft Corporation - All rights reserved. 
-Jaspersoft grants to you a non-exclusive, non-transferable, royalty-free license to use the deliverable(s) pursuant to 
-the applicable evaluation license agreement (or, if you later purchase a subscription, the applicable subscription 
-agreement) relating to the Jaspersoft software product at issue. 
-
-The Jaspersoft Sales department provides the Proof of Concept deliverable(s) "AS IS" and WITHOUT A WARRANTY OF ANY KIND. 
-It is not covered by any Jaspersoft Support agreement or included in any Professional Services offering. 
-At the discretion of the head of the Jaspersoft Professional Services team, support, maintenance and enhancements may be 
-available for such deliverable(s) as "Time for Hire": http://www.jaspersoft.com/time-for-hire.
-
+ * License: See https://github.com/marianol/JasperServer-for-PHP/blob/master/README.markdown 
  */
 
 require_once('config.php');
@@ -32,12 +19,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 	$WSRest = new Pest(JS_WS_URL);
 	$WSRest->curl_opts[CURLOPT_HEADER] = true;
-	$myuserdata = explode("|", $_POST['username']);
-	if ($_POST['username'] == 'jasperadmin') {
-		$_POST['username'] = 'jasperadmin|organization_1';
+	
+	if ($_POST['username'] == 'superuser') {
+	    // Superuser logging in do not use organization
+        $j_username = $_POST['username'];
+	} elseif ($_POST['org'] != '') {
+	    // User entered an Org append that to the username for REST login
+	    $j_username = $_POST['username'] . '|' . $_POST['org'];
+	} else {
+	    // not superuser and no org entered, Default to 'organization_1'
+	    $_POST['org'] = 'organization_1';
+        $j_username = $_POST['username'] . '|' . $_POST['org'];
 	}
 	$restData = array(
-	  'j_username' => $_POST['username'],
+	  'j_username' => $j_username,
 	  'j_password' => $_POST['password']
 	);
 	
@@ -46,35 +41,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$body = $WSRest->post('login', $restData);
 		$response = $WSRest->last_response;
 		if ($response['meta']['http_code'] == '200') {
-			// Respose code 200 -> All OK
-			session_register("username");
-	        session_register("password");
-			session_register("userlevel");
+			// Respose code 200 -> All OK login succeded
 	        $_SESSION["username"]= $_POST['username'];
 	        $_SESSION["password"]= $_POST['password'];
 			$_SESSION["userlevel"]= USER;
 			
-			// Cookie: JSESSIONID=52E79BCEE51381DF32637EC69AD698AE; $Path=/jasperserver
-			/* 
-             * array(2) {
-			     [0]=> string(86) "Set-Cookie: JSESSIONID=9E78606E2B3190ADA6B0E4EF920F6FEE; Path=/emerald-pro/; HttpOnly " 
-			     [1]=> string(74) "JSESSIONID=9E78606E2B3190ADA6B0E4EF920F6FEE; Path=/emerald-pro/; HttpOnly " } 
-            */
+			// Cookie: JSESSIONID=<sessionID>; $Path=<pathToJRS>
+
 			// Extract the Cookie and save the string in my session for further requests.
 			preg_match('/^Set-Cookie: (.*?)$/sm', $body, $cookie);
-
 			$_SESSION["JSCookie"] = '$Version=0; ' . str_replace('Path', '$Path', $cookie[1]);
 			
 			// Grab the JS Session ID and set the cookie in the right path so 
-			// when I present an iFrame I can share be authenticated
+			// when I present an iFrame I can use that session to be authenticated
 			// For this to work JS and the App have to run in the same domain 
 			
 			preg_match_all('/=(.*?);/' , $cookie[1], $cookievalue);
 			setcookie('JSESSIONID', $cookievalue[1][0], time() + (3600 * 3), $cookievalue[1][1]);
-
-	        header("location: iframe.php");
+            // redirect to the about page
+	        header("location: about.php");
 	        exit();
 		} else {
+		    // Login Failed set error to display
 			$errorMessage = "Unauthorized Code: " . $response['meta']['http_code'];
 		}
 		
@@ -138,7 +126,13 @@ $errorMessage = (!empty($errorMessage)) ? decorateError($errorMessage) : '';
 		<div class="box">
 		   <form name = 'login' action = '' method = 'POST'>
 		          <h4><img class="left" src="<?php echo WWW_ROOT; ?>images/lock.gif" alt="LOCKED" width="29" height="31" /> Login  </h4>
-					<p>Type in a JasperServer username and password (i.e. jasperadmin/jasperadmin)</p>
+					<p>Type in a JasperServer username and password (i.e. jasperadmin/jasperadmin)<br />
+					    If you are not using multitennancy you can leave the organization blank, it will use the default organization.
+					    </p>
+                    <p><label for="username">Organization:&nbsp;</label>
+                    <input type = 'text' name = 'org' value="" />
+                    </p>
+                    <p>
 					<p><label for="username">Username:&nbsp;</label>
 		            <input type = 'text' name = 'username' value="" />
 		            </p>
