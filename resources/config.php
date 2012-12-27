@@ -47,11 +47,16 @@ define('SITE_PATH', '/Library/WebServer/Documents/JSDemo/');
  * the iframe integration will require a SSO or passing user and password in the GET request see iframe.php
  */
 
- define('JRS_BASE_URL', 'http://localhost:8080/jasperserver-pro/'); // Pro
-//define('JS_WS_URL', 'http://localhost:8080/jasperserver'); // Community
+ define('JRS_HOST', 'localhost');
+ define('JRS_PORT', '8080');
+ define('JRS_BASE', '/jasperserver-pro'); // Pro
+ // define('JRS_BASE', '/jasperserver'); // Community
+ 
+ define('JRS_BASE_URL', 'http://' . JRS_HOST . ':' . JRS_PORT . JRS_BASE . '/'); 
 
  define('JS_WS_URL', JRS_BASE_URL . 'rest/');
  define('JS_REST_URL', JRS_BASE_URL . 'rest_v2/');
+
 /**
  * JRS Base URL For IFRAME for this to work without exposing the authentication 
  * Both JRS and this app should reside in the same TLD
@@ -85,7 +90,7 @@ $_SiteConfig['site'] = array(
 );
 
 $_SiteConfig['user_menu']  = '
-	<li ><a href="home.php">Web Services Integration</a></li>
+	<li ><a href="repository.php">Web Services Integration</a></li>
 	<li ><a href="iframe.php">Jasper UI Integration</a></li> 
 	<li ><a href="PHP-CLass-Docs.php">JasperReports Wrapper Docs</a></li>
 	<li ><a href="about.php">About this Sample</a></li> 

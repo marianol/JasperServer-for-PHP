@@ -1,11 +1,12 @@
 JasperServer REST Integration Sample
 ========================================
 
-https://github.com/marianol/JasperServer-for-PHP/
 
-Author Mariano Luna
+Code: https://github.com/marianol/JasperServer-for-PHP/
 
-Version 1.1
+Author: Mariano Luna
+
+Version: 2.0 beta
 
 Requirements
 ------------

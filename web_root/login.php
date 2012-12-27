@@ -45,6 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			// Respose code 200 -> All OK login succeded
 	        $_SESSION["username"]= $_POST['username'];
 	        $_SESSION["password"]= $_POST['password'];
+            $_SESSION["org"]= $_POST['org'];
 			$_SESSION["userlevel"]= USER;
 			
 			// Cookie: JSESSIONID=<sessionID>; $Path=<pathToJRS>
