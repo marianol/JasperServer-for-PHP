@@ -6,6 +6,23 @@
  *
  * @author Mariano Luna
  * @copyright Copyright (c) 2011
+ * 
+ Unless you have purchased a commercial license agreement from Jaspersoft,
+ the following license terms apply:
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as
+ published by the Free Software Foundation, either version 3 of the
+ License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU Affero  General Public License for more details.
+
+ You should have received a copy of the GNU Affero General Public  License
+ along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * 
  */
 
 require_once('config.php');
@@ -25,7 +42,6 @@ $_PageTabs = decoratePageTabs($tabArray, 99);
 
 $root = (isset($_GET['root'])) ? htmlentities($_GET['root']) : '/';
 
-require_once('jasper-rest/client/JasperClient.php');
 
 $client = new Jasper\JasperClient(
     JRS_HOST, // Hostname
@@ -63,6 +79,12 @@ foreach ($repository as $resourceDescriptor) {
 				$screen .= '<li> <img src="'. WWW_ROOT .'images/icon-edit.gif" align="absmiddle" >
 				    <a href="viewReport.php?uri=' . $resourceDescriptor->getUriString()  . '" 
 				    title="' . addslashes($resourceDescriptor) . '">' . $resourceDescriptor->getLabel() . '</a></li>';
+				    $report_options = $client->getReportOptions($resourceDescriptor->getUriString());
+                            
+                        foreach($report_options as $ro) {
+                           // echo $ro->getLabel() . "<br />";
+                        }   
+				    
 			break;
 			default:
 				$screen .= '<li>' . $resourceDescriptor->getLabel() . ' (' . $resourceDescriptor->getWsType() . ')</li>';

@@ -7,19 +7,22 @@
  * @copyright Copyright (c) 2011
  * @author Mariano Luna
  * 
-LICENSE AND COPYRIGHT NOTIFICATION
-==================================
+ Unless you have purchased a commercial license agreement from Jaspersoft,
+ the following license terms apply:
 
-The Proof of Concept deliverable(s) are (c) 2011 Jaspersoft Corporation - All rights reserved. 
-Jaspersoft grants to you a non-exclusive, non-transferable, royalty-free license to use the deliverable(s) pursuant to 
-the applicable evaluation license agreement (or, if you later purchase a subscription, the applicable subscription 
-agreement) relating to the Jaspersoft software product at issue. 
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as
+ published by the Free Software Foundation, either version 3 of the
+ License, or (at your option) any later version.
 
-The Jaspersoft Sales department provides the Proof of Concept deliverable(s) "AS IS" and WITHOUT A WARRANTY OF ANY KIND. 
-It is not covered by any Jaspersoft Support agreement or included in any Professional Services offering. 
-At the discretion of the head of the Jaspersoft Professional Services team, support, maintenance and enhancements may be 
-available for such deliverable(s) as "Time for Hire": http://www.jaspersoft.com/time-for-hire.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU Affero  General Public License for more details.
 
+ You should have received a copy of the GNU Affero General Public  License
+ along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 require_once('config.php');
@@ -37,6 +40,25 @@ $tabArray =  array();
 $tabArray[99] = '<a href="#" class="active">Logged as: ' . $_SESSION["username"] . '</a>';
 $_PageTabs = decoratePageTabs($tabArray, 99);
 
+$client = new Jasper\JasperClient(
+    JRS_HOST, // Hostname
+    JRS_PORT, // Port
+    $_SESSION['username'], // Username
+    $_SESSION['password'], // Password
+    JRS_BASE, // Base URL
+    $_SESSION['org'] // Organization 
+);
+
+
+$input_controls = $client->getReportInputControls($reportUnit);
+//var_dump($input_controls);
+//echo "<hr>";
+foreach($input_controls as $ic) {
+  printf('Key: %s <br />', $ic->getId());
+  foreach ($ic->getOptions() as $ico) {
+  echo $ico['label'] . ' -- ' . $ico['value'] . '<br>';
+  }
+}   
 
 $WSRest = new PestXML(JS_WS_URL);
 // Set auth Header
