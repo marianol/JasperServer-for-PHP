@@ -73,31 +73,47 @@ $client = new Jasper\JasperClient(
 );
 
 // Input Contols
-$input_controls = $client->getReportInputControls($reportUnit);
-//var_dump($input_controls);
+$input_control_info = $client->getReportInputControlStructure($reportUnit);
+
 $icRender = array();
 $inputControlsDisplay = '';
 $controls = array();
-foreach($input_controls as $ic) {
-      // build html render  
-      $overrideICs = isset($sentControls[$ic->getId()])? $sentControls[$ic->getId()] : array();
-      $icRender[$ic->getId()] =  makeComboArray($ic->getID(),$ic->getOptions(), $overrideICs );
-      $inputControlsDisplay .= '<br /><strong>' . $ic->getId(). '</strong>: ' . $icRender[$ic->getId()] ;
-      // set control defaults
-      $defaultControls[$ic->getId()] = $ic->getSelected();
+foreach($input_control_info as $ic) {
+    // build html render  
+    $overrideICs = isset($sentControls[$ic->getId()])? $sentControls[$ic->getId()] : array();
+    switch ($ic->getType()) {
+        case 'singleSelect':
+            // render combo Box
+            $icRender[$ic->getId()] =  makeComboArray($ic->getID(), $ic->inputOptions->getOptions(), $overrideICs );
+            // set control defaults
+            $defaultControls[$ic->getId()] = $ic->inputOptions->getSelected();           
+            break;
+        
+        default:
+            // Render general Input box
+            $inputType = ($ic->visible) ? 'text' : 'hidden';
+            $icRender[$ic->getId()] = '<input type="'. $inputType . '" name="'. $ic->getID() . '" value="' . $ic->inputOptions->getValue() . '">';
+            // set control defaults
+            $defaultControls[$ic->getId()] = $ic->inputOptions->getValue();            
+            break;
+    }    
+    $inputControlsDisplay .= '<br /><strong>' . $ic->getLabel(). '</strong>: ';
+    $inputControlsDisplay .= ($ic->mandatory) ? '(*) ' : ' ';
+    $inputControlsDisplay .= $icRender[$ic->getId()] ;
+    $inputControlsDisplay .= ' - IC Type: ' . $ic->getType();
 }   
 
-// Get report
+
 // $controls = array(
    // 'Country_multi_select' => array('USA', 'Mexico'),
    // 'Cascading_state_multi_select' => array('CA', 'OR')
    // );
+// Set report input control send submitted ones or default values
 $controls = isset($sentControls)? $sentControls : $defaultControls;
+// Get report
 $report = $client->runReport($reportUnit, $format, null, $controls);
 
 $screen .= $report;       
-
-$screen .= '<hr>' . htmlentities(print_r($controls, true));
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
@@ -154,7 +170,7 @@ $screen .= '<hr>' . htmlentities(print_r($controls, true));
 			         <option value="swf">SWF</option>
 			     </select>
 			     <?php echo $inputControlsDisplay; ?>
-			    			     
+			    <br />			     
 			     <input type="submit" value="Run the report">
    			</form>
    			<hr />
