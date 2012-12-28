@@ -153,7 +153,7 @@ class InputStructure {
             $temp = new self($k['uri'], $k['id'], $k['type'], $k['label'], $k['mandatory'], $k['readOnly'],
                              $k['visible']);
             if (!empty($k['state'])) {
-                    $temp->inputOptions = InputOptions::createFromArray($k['state']);
+                    $temp->inputControls = InputOptions::createFromArray($k['state']);
             }
             $temp->masterDependencies = $k['masterDependecies'];
             $temp->slaveDependencies = $k['slaveDependencies'];
@@ -164,7 +164,7 @@ class InputStructure {
     }
 
 
-    public function getOptions() {
+    public function getInputOptions() {
         return $this->inputOptions;
     }
 
@@ -172,6 +172,10 @@ class InputStructure {
         return $this->uri;
     }
 
+    public function getLabel() {
+        return $this->label;
+    }
+    
     public function getType() {
         return $this->type;
     }
