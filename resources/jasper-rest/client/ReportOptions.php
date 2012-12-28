@@ -78,18 +78,15 @@ class InputOptions {
 		return $result;
 	}
 
-    public static function createFromArray($data_array) {
-        $result = array();
-        foreach($data_array['inputControlState'] as $k) {
-            $temp = new self($k['uri'], $k['id'], $k['value'], $k['error']);
-            if (!empty($k['options'])) {
-                foreach ($k['options'] as $o) {
-                    $temp->addOption($o['label'], $o['value'], $o['selected']);
-                }
+    public static function createFromArray($icData) {
+        $temp = new self($icData['uri'], $icData['id'], $icData['value'], $icData['error']);
+        if (!empty($icData['options'])) {
+            foreach ($icData['options'] as $o) {
+                $temp->addOption($o['label'], $o['value'], $o['selected']);
             }
-            $result[] = $temp;
         }
-        return $result;
+        
+        return $temp;
     }
 	public function addOption($label, $value, $selected) {
 		$temp = array('label' => strval($label), 'value' => strval($value), 'selected' => $selected);
@@ -105,6 +102,10 @@ class InputOptions {
 		return $this->uri;
 	}
 
+    public function getValue() {
+        return $this->value;
+    }
+    
     public function getSelected() {
         $selectedValues = array();
         foreach ($this->options as $opt) {
@@ -153,11 +154,17 @@ class InputStructure {
             $temp = new self($k['uri'], $k['id'], $k['type'], $k['label'], $k['mandatory'], $k['readOnly'],
                              $k['visible']);
             if (!empty($k['state'])) {
-                    $temp->inputControls = InputOptions::createFromArray($k['state']);
+                    $temp->inputOptions = InputOptions::createFromArray($k['state']);
             }
-            $temp->masterDependencies = $k['masterDependecies'];
-            $temp->slaveDependencies = $k['slaveDependencies'];
+            if (isset($k['masterDependecies'])) {
+                $temp->masterDependencies = $k['masterDependecies'];
+            }
+            if (isset($k['slaveDependencies'])) {
+                $temp->slaveDependencies = $k['slaveDependencies'];
+            }
+            if (isset($k['validationRules'])) {
             $temp->validationRules = $k['validationRules'];
+            }
             $result[] = $temp;
         }
         return $result;
