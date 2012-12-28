@@ -92,6 +92,16 @@ class InputOptions {
 		return $this->uri;
 	}
 
+    public function getSelected() {
+        $selectedValues = array();
+        foreach ($this->options as $opt) {
+            if ($opt['selected'] == 'true') {
+                $selectedValues[] = $opt['value'];
+            }
+        }
+        return $selectedValues;
+    }
+    
 	public function getId() {
 		return $this->id;
 	}
