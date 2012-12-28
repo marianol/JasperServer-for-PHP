@@ -950,7 +950,7 @@ class JasperClient {
     public function getReportInputControlStructure($uri) {
         $url = $this->restUrl2 . '/reports' . $uri . '/inputControls';
         $data = $this->prepAndSend($url, array(200), 'GET', null, true, 'application/json', 'application/json');
-        return $data; //InputStructuren::createFromJSON($data);
+        return InputStructure::createFromJSON($data);
     }
     
 	/**
