@@ -941,6 +941,18 @@ class JasperClient {
 		return InputOptions::createFromJSON($data);
 	}
 
+    /**
+     * This function will request the possible values and data behind all the input controls of a report.
+     *
+     * @param string $uri
+     * @return Array<\Jasper\InputOptions>
+     */
+    public function getReportInputControlStructure($uri) {
+        $url = $this->restUrl2 . '/reports' . $uri . '/inputControls';
+        $data = $this->prepAndSend($url, array(200), 'GET', null, true, 'application/json', 'application/json');
+        return $data; //InputStructuren::createFromJSON($data);
+    }
+    
 	/**
 	 * Update or Create new Report Options.
      *
