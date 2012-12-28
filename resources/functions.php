@@ -70,14 +70,20 @@ function makeSelectArray($ComboName, $SelectedValue, $array, $css = "", $atribut
  * @param string $tagAttributes
  * @return string
  */
-function makeComboArray($ComboName, $ComboElements, $cssClass = "", $tagAttributes = "" )
+function makeComboArray($ComboName, $ComboElements, $overrideDefaultSelection = array(), $cssClass = "", $tagAttributes = "" )
 {
     
     $combo_box = "";
     $combo_box .= '<select name="'.$ComboName.'" class="'.$cssClass.'" '.$tagAttributes.' >'."\n";
-
+    $overrideSelected = !empty($overrideDefaultSelection);
     foreach ($ComboElements as $item => $valuesArray) {
-        $selection = ($valuesArray['selected'] == 'true') ? ' SELECTED ' : '';
+        if ($overrideSelected) {
+            $selection = (in_array($valuesArray['value'], $overrideDefaultSelection)) ? ' SELECTED ' : '';
+        } else {
+            // Use default selections
+            $selection = ($valuesArray['selected'] == 'true') ? ' SELECTED ' : '';
+        }
+        
         $combo_box .= '<option value="'. $valuesArray['value'] .'" '. $selection .'>'. $valuesArray['label']  .'</option>'."\n";
     }
     $combo_box .= "</select>\n";

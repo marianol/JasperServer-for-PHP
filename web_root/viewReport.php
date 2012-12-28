@@ -80,7 +80,8 @@ $inputControlsDisplay = '';
 $controls = array();
 foreach($input_controls as $ic) {
       // build html render  
-      $icRender[$ic->getId()] =  makeComboArray($ic->getID(),$ic->getOptions());
+      $overrideICs = isset($sentControls[$ic->getId()])? $sentControls[$ic->getId()] : array();
+      $icRender[$ic->getId()] =  makeComboArray($ic->getID(),$ic->getOptions(), $overrideICs );
       $inputControlsDisplay .= '<br /><strong>' . $ic->getId(). '</strong>: ' . $icRender[$ic->getId()] ;
       // set control defaults
       $defaultControls[$ic->getId()] = $ic->getSelected();
