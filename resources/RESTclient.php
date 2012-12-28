@@ -4,6 +4,10 @@
  * @author Mariano Luna
  * 
  * License: See https://github.com/marianol/JasperServer-for-PHP/blob/master/README.markdown 
+ * 
+ * This file is kept for compatibility with REST v1 in JasperServer 4.5 is not used 
+ * by the new Jasper Rest Wrapper for Jasper 4.7 and above
+ * 
  */
 // Define Type Constants
 
@@ -138,6 +142,14 @@
 	define("RUN_OUTPUT_IMAGES_URI","IMAGES_URI");
 	define("RUN_OUTPUT_PAGE","PAGE");
 
+/*
+ * This helper functions allow you to get and render Input controls using
+ * the Jasper Server Rest API v1 that comes with Jasper Server v4.5
+ * if you are using Japser Server v.4.7 or better restv2 API and the 
+ * gives you better methods for doing this.
+ * 
+ */
+  
 function RenderInputControl($ICResource, $dsUri) {				// Get Input Control resource
 	global $JS_IC_Type;
 	
