@@ -90,9 +90,10 @@ define('JS_IFRAME_URL', JRS_BASE_URL );
 
 /* Get Required Libraries */
 require_once 'RESTclient.php';
-require_once 'functions.php';
 require_once 'PEST/PestXML.php';
+
 require_once('jasper-rest/client/JasperClient.php');
+require_once 'functions.php';
 
 /**
  * Main Site Configuration Array
