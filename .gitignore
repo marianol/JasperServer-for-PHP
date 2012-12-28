@@ -2,3 +2,5 @@
 *.pyc
 *.pyo
 .DS_Store
+.project
+.settings
