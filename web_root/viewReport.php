@@ -88,7 +88,12 @@ foreach($input_control_info as $ic) {
             // set control defaults
             $defaultControls[$ic->getId()] = $ic->inputOptions->getSelected();           
             break;
-        
+        case 'multiSelect':
+            // render combo Box
+            $icRender[$ic->getId()] =  makeComboArray($ic->getID(), $ic->inputOptions->getOptions(), $overrideICs,'',' multiple ' );
+            // set control defaults
+            $defaultControls[$ic->getId()] = $ic->inputOptions->getSelected();           
+            break;        
         default:
             // Render general Input box
             $inputType = ($ic->visible) ? 'text' : 'hidden';
