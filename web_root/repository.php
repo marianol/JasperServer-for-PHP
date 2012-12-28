@@ -148,7 +148,7 @@ $screen .= '</ul>';
 		<div id="footer" class="span-16"> 
 			<!-- Footer Links -->
 		</div> 
-		<div class="alt span-7 last">
+		<div class="alt span-7 last"><p>&nbsp;</p>
 			<a href="http://www.jaspersoft.com">My Reporting Appication</a>
 		</div>
 </div>
