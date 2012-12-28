@@ -12,6 +12,7 @@ class REST_Request
 	protected $content_type;
 	protected $response_body;
 	protected $response_info;
+    protected $jrsSessionCookie = null;
 	protected $file_to_upload = array();
 
 	public function __construct ($url = null, $verb = 'GET', $request_body = null)
@@ -202,10 +203,20 @@ class REST_Request
 
 	protected function doExecute (&$curlHandle)
 	{
+		// See if we have an open session
+		if ( $this->jrsSessionCookie !== null) {
+            // Set the JRS Session cookie
+            curl_setopt($ch, CURLOPT_COOKIE,  $this->jrsSessionCookie );
+		}
+
 		$this->setCurlOpts($curlHandle);
 		$this->response_body = curl_exec($curlHandle);
 		$this->response_info	= curl_getinfo($curlHandle);
-
+        if ($this->jrsSessionCookie === null) {
+            // Extract the Cookie and save the string in my session for further requests.
+            preg_match('/^Set-Cookie: (.*?)$/sm', $this->response_body, $cookie);
+            $this->jrsSessionCookie = '$Version=0; ' . str_replace('Path', '$Path', $cookie[1]);
+        }
 		curl_close($curlHandle);
 	}
 
@@ -276,6 +287,11 @@ class REST_Request
 		return $this->url;
 	}
 
+    public function getJRSSessionCookie ()
+    {
+        return $this->jrsSessionCookie;
+    }
+    
 	public function setUrl ($url)
 	{
 		$this->url = $url;

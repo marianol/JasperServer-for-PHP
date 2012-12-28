@@ -52,6 +52,7 @@ class JasperClient {
 	private $restReq;
 	private $restUrl;
 	private $restUrl2;
+    protected $jrsSessionCookie;
 
 	/***> INTERNAL FUNCTIONS <***/
 
@@ -135,12 +136,17 @@ class JasperClient {
 				throw new RESTRequestException('Unexpected HTTP code returned: ' . $statusCode);
 			}
 		}
+        $this->jrsSessionCookie = $this->restReq->getJRSSessionCookie();
 		if($returnData == true) {
 			return $this->restReq->getResponseBody();
 		}
 		return true;
 	}
 
+    public function getJRSSessionID()
+    {
+        return $this->jrsSessionCookie;
+    }
     /**
      * This function creates a multipart/form-data request and sends it to the server.
      * this function should only be used when a file is to be sent with a request (PUT/POST).
