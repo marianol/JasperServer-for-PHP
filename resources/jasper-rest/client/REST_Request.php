@@ -212,11 +212,7 @@ class REST_Request
 		$this->setCurlOpts($curlHandle);
 		$this->response_body = curl_exec($curlHandle);
 		$this->response_info	= curl_getinfo($curlHandle);
-        if ($this->jrsSessionCookie === null) {
-            // Extract the Cookie and save the string in my session for further requests.
-            preg_match('/^Set-Cookie: (.*?)$/sm', $this->response_body, $cookie);
-            $this->jrsSessionCookie = '$Version=0; ' . str_replace('Path', '$Path', $cookie[1]);
-        }
+
 		curl_close($curlHandle);
 	}
 

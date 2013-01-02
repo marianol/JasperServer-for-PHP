@@ -142,7 +142,23 @@ class JasperClient {
 		}
 		return true;
 	}
-
+    
+    public function login()
+    {
+        $url = $this->restUrl . LOGIN_BASE_URL;
+        $PostBody = array(
+          'j_username' => $this->username,
+          'j_password' => $this->password
+        );
+        if ($this->prepAndSend($url, array(200), 'POST', $xml)) {
+            return true;
+        }
+        return false;        if ($this->jrsSessionCookie === null) {
+            // Extract the Cookie and save the string in my session for further requests.
+            preg_match('/^Set-Cookie: (.*?)$/sm', $this->response_body, $cookie);
+            $this->jrsSessionCookie = '$Version=0; ' . str_replace('Path', '$Path', $cookie[1]);
+        }
+    }
     public function getJRSSessionID()
     {
         return $this->jrsSessionCookie;
