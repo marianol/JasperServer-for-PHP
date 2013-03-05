@@ -6,16 +6,16 @@ Code: http://github.com/marianol/JasperServer-for-PHP/
 
 Author: Mariano Luna
 
-Version: 2.0 beta
+Version: 2.0
 
 Requirements
 ------------
 
 * PHP version 5.3.x
-* JasperServer 4.5 or better installed in the same domian. (Tested with v 5.0.1)
+* JasperServer 4.7 or better installed in the same domian. (Tested with v 5.0.1)
 * The PEAR package manager (http://pear.php.net)
   * XML_Serializer PEAR package (http://pear.php.net/manual/en/package.xml.xml-serializer.php) 
-* Embed theme installed on JasperServer (included in "./resources/JS-embed-theme") for Jasper Server version 4.5 use embed-4.5.zip and for version 4.7 or 5.0 use embed-4.7.zip 
+* Embed theme installed on JasperServer (included in "./resources/JS-embed-theme") for version 4.7+ use embed-4.7.zip 
 
 Using thiis Sample
 ------------------
