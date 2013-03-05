@@ -4,9 +4,8 @@
  * JS integration via iFrame this method uses the Rest Cookie seup in login.php to authenticate with the server.
  *
  *
- * @copyright Copyright (c) 2011 - 2012
  * @author Mariano Luna
- * 
+ * @copyright Copyright (c) 2011 - 2012 
  *  Unless you have purchased a commercial license agreement from Jaspersoft,
  the following license terms apply:
 
@@ -34,7 +33,7 @@ $default_tab = 'library'; // set the default tab
 $myPath = (isset($_GET['action'])) ? urldecode($_GET['action']) : $default_tab;
 
 // Set the Height of the iFrame in px
-$iFrameHeight = "600px";
+$iFrameHeight = "680px";
 
 // This iframe uses the embed theme (see README.markdown) to cleanup the Jasper UI for embedding
 $iFrameAttributes = "&theme=embed"; 
@@ -77,12 +76,13 @@ switch ($myPath) {
 		break;	
 	case 'analisys': //open an olap view
 		$iFramePath = "olap/viewOlap.html?new=true&parentFlow=searchFlow&name=%2Fsupermart%2FrevenueAndProfit%2FProfitView&ParentFolderUri=%2Fsupermart%2FrevenueAndProfit";  
+		$iFramePath = "flow.html?_flowId=adhocFlow&resource=%2Fpublic%2FSamples%2FAd_Hoc_Views%2FUnit_Sales_Trend&ParentFolderUri=%2Fpublic%2FSamples%2FAd_Hoc_Views";
 		break;
     case 'report':
-        $iFramePath = "flow.html?_flowId=viewReportFlow&standAlone=true&_flowId=viewReportFlow&ParentFolderUri=%2Freports%2Finteractive&reportUnit=%2Freports%2Finteractive%2FCascading_Report_2_Updated";
+        $iFramePath = "flow.html?_flowId=viewReportFlow&standAlone=true&_flowId=viewReportFlow&reportUnit=%2Fpublic%2FSamples%2FReports%2FCascading_Report_2_Updated";
     break;
 	case 'dashboard':
-		$iFramePath = "flow.html?_flowId=dashboardRuntimeFlow&dashboardResource=%2Fpublic%2FSamples%2FDashboards%2FSupermartDashboard";
+		$iFramePath = "flow.html?_flowId=dashboardRuntimeFlow&dashboardResource=%2Fpublic%2FSamples%2FDashboards%2F3__Supermart_Dashboard"; //public%2FSamples%2FDashboards%2FSupermartDashboard";
 	break;
     case 'library':
         // Use Library
@@ -90,6 +90,7 @@ switch ($myPath) {
     break;
 	default:
 		$iFramePath = "/flow.html?_flowId=homeFlow";
+        $iFramePath = "/flow.html?_flowId=dashboardRuntimeFlow&dashboardResource=%2Fpublic%2FSamples%2FDashboards%2F3__Supermart_Dashboard"; //public%2FSamples%2FDashboards%2FSupermartDashboard";
 
 		$myPath = 'home';
 		break;

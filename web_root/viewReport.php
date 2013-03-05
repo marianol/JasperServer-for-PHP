@@ -4,9 +4,8 @@
  * 
  *
  *
- * @copyright Copyright (c) 2011
  * @author Mariano Luna
- * 
+ * @copyright Copyright (c) 2011 
  Unless you have purchased a commercial license agreement from Jaspersoft,
  the following license terms apply:
 
@@ -58,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $format = 'html';
 }
 $screen = '';
-$_PageTitle = 'Welcome ' . $_SESSION["username"] ; 
+$_PageTitle = 'Report Viewer' ; 
 $tabArray =  array();
 $tabArray[99] = '<a href="#" class="active">Logged as: ' . $_SESSION["username"] . '</a>';
 $_PageTabs = decoratePageTabs($tabArray, 99);
@@ -118,7 +117,21 @@ $controls = isset($sentControls)? $sentControls : $defaultControls;
 // Get report
 $report = $client->runReport($reportUnit, $format, null, $controls);
 
-$screen .= $report;       
+if ($format == 'html') {
+    $screen .= $report;       
+} else {
+    header('Cache-Control: must-revalidate');
+    header('Pragma: public');
+    header('Content-Description: File Transfer');
+    header('Content-Disposition: attachment; filename=report.' . $format );
+    header('Content-Transfer-Encoding: binary');
+    header('Content-Length: ' . strlen($report));
+    header('Content-Type: application/' . $format);
+    
+    echo $report;       
+    die();
+}
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">

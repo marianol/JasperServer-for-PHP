@@ -54,7 +54,7 @@ $client = new Jasper\JasperClient(
 
 // get the repository contents
 $repository = $client->getRepository($root); 
-
+// echo $client->getJRSSessionID();
 // Set the path breadcrumns
 foreach (explode('/', $root) as $key => $items) {
 	$tempArray[] = $items;
