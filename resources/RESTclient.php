@@ -6,7 +6,7 @@
  * License: See https://github.com/marianol/JasperServer-for-PHP/blob/master/README.markdown 
  * 
  * This file is kept for compatibility with REST v1 in JasperServer 4.5 is not used 
- * by the new Jasper Rest Wrapper for Jasper 4.7 and above
+ * in the new version, that uses instead the Jasper Rest Wrapper for Jasper 4.7 and above
  * 
  */
 // Define Type Constants

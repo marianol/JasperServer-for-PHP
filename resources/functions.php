@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @copyright Copyright (c) 2009
+ * @author Mariano Luna
+ * 
+ */
+ 
 // Decorators
 function decorateError($errorText, $errorType = '') {
     return '<div class="error">' . $errorText . '</div>';

@@ -5,8 +5,8 @@
  *
  *
  * @author Mariano Luna
- * @copyright Copyright (c) 2011
  * 
+ * @copyright Copyright (c) 2011 Jaspersoft Corporation - All rights reserved. 
  Unless you have purchased a commercial license agreement from Jaspersoft,
  the following license terms apply:
 

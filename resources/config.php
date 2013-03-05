@@ -2,11 +2,11 @@
 /**
  * My App configuration file.
  *
- * @copyright Copyright (c) 2011 - 2012
  * @author Mariano Luna
  * 
  * Please check: https://github.com/marianol/JasperServer-for-PHP/blob/master/README.markdown 
  * 
+ * @copyright Copyright (c) 2012 Jaspersoft Corporation - All rights reserved. 
  Unless you have purchased a commercial license agreement from Jaspersoft,
  the following license terms apply:
 

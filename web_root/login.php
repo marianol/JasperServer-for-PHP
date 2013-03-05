@@ -4,10 +4,10 @@
  * Show the login form and authenticate the user against JasperServer
  * I also use the JS Session ID sent from the REST Auth to set a cookie for the iframe integration
  * 
- *
- * @copyright Copyright (c) 2011
+ * 
  * @author Mariano Luna
  * 
+ * @copyright Copyright (c) 2012 Jaspersoft Corporation - All rights reserved. 
  *  Unless you have purchased a commercial license agreement from Jaspersoft,
  the following license terms apply:
 
