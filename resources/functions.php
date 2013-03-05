@@ -1,5 +1,6 @@
 <?php
 
+// Decorators
 function decorateError($errorText, $errorType = '') {
     return '<div class="error">' . $errorText . '</div>';
 }
@@ -51,5 +52,43 @@ function makeSelectArray($ComboName, $SelectedValue, $array, $css = "", $atribut
     return $combo_box;
 }
 
+/**
+ * Creates a combo box from an array with the format send by the jasper API v2
+ * array(n) ( 
+ * 1 => array(3) {
+ *   ["label"]=>
+ *   string(3) "jim"
+ *   ["value"]=>  string(6) "jim_id"
+ *   ["selected"]=>  string(4) "true"
+ * } 
+ * ...
+ * );
+ *
+ * @param string $ComboName
+ * @param array $ComboElements
+ * @param string $cssClass
+ * @param string $tagAttributes
+ * @return string
+ */
+function makeComboArray($ComboName, $ComboElements, $overrideDefaultSelection = array(), $cssClass = "", $tagAttributes = "" )
+{
+    
+    $combo_box = "";
+    $combo_box .= '<select name="'.$ComboName.'" class="'.$cssClass.'" '.$tagAttributes.' >'."\n";
+    $overrideSelected = !empty($overrideDefaultSelection);
+    foreach ($ComboElements as $item => $valuesArray) {
+        if ($overrideSelected) {
+            $selection = (in_array($valuesArray['value'], $overrideDefaultSelection)) ? ' SELECTED ' : '';
+        } else {
+            // Use default selections
+            $selection = ($valuesArray['selected'] == 'true') ? ' SELECTED ' : '';
+        }
+        
+        $combo_box .= '<option value="'. $valuesArray['value'] .'" '. $selection .'>'. $valuesArray['label']  .'</option>'."\n";
+    }
+    $combo_box .= "</select>\n";
+
+    return $combo_box;
+}
 
 ?>

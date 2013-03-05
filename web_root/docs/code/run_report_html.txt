@@ -1,0 +1,5 @@
+
+// The URI string could also be found from a resourceDescriptor object 
+// using the getUriString() method
+$report = $client->runReport('/reports/samples/AllAccounts', 'html'); 
+echo $report;

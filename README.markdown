@@ -1,26 +1,29 @@
 JasperServer REST Integration Sample
 ========================================
 
-https://github.com/marianol/JasperServer-for-PHP/
 
-Author Mariano Luna
+Code: http://github.com/marianol/JasperServer-for-PHP/
 
-Version 1.1
+Author: Mariano Luna
+
+Version: 2.0 beta
 
 Requirements
 ------------
 
 * PHP version 5.3.x
-* JasperServer 4.5 or > 4.7 installed in the same domian
+* JasperServer 4.5 or better installed in the same domian. (Tested with v 5.0.1)
 * The PEAR package manager (http://pear.php.net)
   * XML_Serializer PEAR package (http://pear.php.net/manual/en/package.xml.xml-serializer.php) 
 * Embed theme installed on JasperServer (included in "./resources/JS-embed-theme") for Jasper Server version 4.5 use embed-4.5.zip and for version 4.7 or 5.0 use embed-4.7.zip 
 
-Usage
------
+Using thiis Sample
+------------------
 
+Once running, go to your web server and login to the sample using a valid Jasper Server username and password (i.e. jasperadmin/jasperadmin)
 * For samples using the REST API check the "Web Services Integration" tab
 * For samples using iFrames and full UI integration check the "Jasper UI Integration" tab
+* For documentation on the JasperServer PHP REST API wrapper class go to the "JasperReports Wrapper Docs" tab
 
 Instalation Instructions
 ------------------------
@@ -35,29 +38,37 @@ Quick Overview
 
 ### Instalation Step by Step How-To
 
-Assuming that you have unzipped the file in:
+This instructions assume that you already have JasperServer installed and a working Apache Web Server with PHP support.
+Uncompress the sample source ZIP file in your drive:
 
 	<myfolder>/php-sample-app/
 
-And inside that folder you have 2 folders:
+Inside that folder you will find  2 folders:
 
-	./resources
-	./web-root
+	./resources -> libraries and other resources
+	./web-root  -> application 
 
-1) in httpd.com (apache configuration file) add this:
+1) Configure your Apache web server to add an alias to the Application web-root folder. 
+We will make an alias to our application web root folder, this will put our application in:
+
+http://<your-server-IP>/myphpapp 
+
+Find the httpd.conf (apache configuration file) and add the following:
 
 	...
 	# Alias for PHP APP demo
-	Alias /myphpapp "<myfolder>\php-sample-app\web_root\"
-	<Directory "<myfolder>\php-sample-app\web_root\">
+	Alias /myphpapp "<myfolder>/php-sample-app/web_root/"
+	<Directory "<myfolder>/php-sample-app/web_root/">
 	    Options Indexes  FollowSymLinks MultiViews ExecCGI
 	    AllowOverride All
 	    Order allow,deny
 	    Allow from all
 	</Directory>
 	...
+	
+Change the path slashes accordingly depending on the OS that apache is installed on (windows or unix-like), check the Apache manual.
 
-2) Modify the .htaccess file in web-root
+2) Modify the .htaccess file in web-root, to change the PHP include path, if you want this change can also be made server-wide in PHP.ini
 
 - Edit the file called htaccess-sample that is in web-root there is only one line in this file should look like this:
 
@@ -70,23 +81,30 @@ _myPEARinstallfolder_ is your path to php-pear installation folder, this may be 
 3) Restart apache
 
 
-4) Change the paths inside ./resources/config.php
+4) Configure the sample application. Change the paths inside ./resources/config.php
 
-	- Line 49: define('SITE_PATH', '/Library/WebServer/Documents/JSDemo/');
-	- Line 72: define('JS_WS_URL', 'http://localhost:8080/jasperserver-pro/rest/');  // if needed
-
-5) Change the path to JRS in  iframe.php
-
-	- Line 47: $iFrameServerURI = "http://localhost:8080/jasperserver-pro/";
+	...
+	// this should match the settings on your httpd.conf file 
+	// i.e. your application lives in http://localhost/myphpapp
+	define('WWW_ROOT', '/myphpapp/');
+	// real OS path where the application is installed
+	define('SITE_PATH', '/Library/WebServer/Documents/JSDemo/'); 
+	...
+	// CHANGE THIS TO POINT TO YOUR JASPER SERVER
+	define('JRS_HOST', 'localhost');
+	define('JRS_PORT', '8080');
+	define('JRS_BASE', '/jasperserver-pro');
+	...
 
 6) go to: http://localhost/myphpapp and Voila!
 
 
-The RESTclient.php file has the input control rendering funtions and all the meat is in:
+The RESTclient.php file has the input control rendering functions and all the meat is in:
 
 	- login.php (authentication)
-	- home.php (repository browser)
+	- repository.php (repository browser)
 	- viewReport.php and executeReport.php (view and execute report)
+	- iframe.php (iframe UI integration)
 
 External Libraries Used
 -----------------------
@@ -101,9 +119,7 @@ All the external libraries are included in this sample, check each library folde
 LICENSE AND COPYRIGHT NOTIFICATION
 ==================================
 
-
- Copyright (C) 2005 - 2012 Jaspersoft Corporation. All rights reserved.
- http://www.jaspersoft.com.
+ Copyright (C) 2005 - 2012 All rights reserved.
 
  Unless you have purchased a commercial license agreement from Jaspersoft,
  the following license terms apply:
@@ -120,4 +136,3 @@ LICENSE AND COPYRIGHT NOTIFICATION
 
  You should have received a copy of the GNU Affero General Public  License
  along with this program. If not, see <http://www.gnu.org/licenses/>.
-

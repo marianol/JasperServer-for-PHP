@@ -1,0 +1,14 @@
+
+$users_to_delete = array(
+			'user1',
+			'billy_user',
+			'fuser');
+
+foreach ($users_to_delete as $user) {
+   try {
+      $userObject = $client->getUsers($user);
+      $client->deleteUser($userObject[0]);
+   } catch (Exception $e) {
+      printf('Unable to delete user: %s', $e->getMessage());
+   }
+}

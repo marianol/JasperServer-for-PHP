@@ -1,11 +1,28 @@
 <?php
 /**
- * home.php Main Site Page.
+ * repository.php List JapserServer Repository
  * show the menu and options
  *
  *
  * @author Mariano Luna
  * @copyright Copyright (c) 2011
+ * 
+ Unless you have purchased a commercial license agreement from Jaspersoft,
+ the following license terms apply:
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as
+ published by the Free Software Foundation, either version 3 of the
+ License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU Affero  General Public License for more details.
+
+ You should have received a copy of the GNU Affero General Public  License
+ along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * 
  */
 
 require_once('config.php');
@@ -18,83 +35,65 @@ if($_SESSION['userlevel'] < USER) {
 
 $_PageTitle = 'Welcome ' . $_SESSION["username"] ; 
 $tabArray =  array();
-$tabArray['repository'] = '<a href="home.php" class="active">Repository Browser</a>';
+$tabArray['repository'] = '<a href="repository.php" class="active">Repository Browser</a>';
 $tabArray['scheduler'] = '<a href="scheduler.php" class="active">Scheduler</a>';
 $tabArray[99] = '<a href="#" class="active">Logged as: ' . $_SESSION["username"] . '</a>';
 $_PageTabs = decoratePageTabs($tabArray, 99);
 
 $root = (isset($_GET['root'])) ? htmlentities($_GET['root']) : '/';
-$WSRest = new PestXML(JS_WS_URL);
-// Set auth Header
-$WSRest->curl_opts[CURLOPT_COOKIE] = $_SESSION["JSCookie"] ;
 
 
+$client = new Jasper\JasperClient(
+    JRS_HOST, // Hostname
+    JRS_PORT, // Port
+    $_SESSION['username'], // Username
+    $_SESSION['password'], // Password
+    JRS_BASE, // Base URL
+    $_SESSION['org'] // Organization 
+);
+
+// get the repository contents
+$repository = $client->getRepository($root); 
+// echo $client->getJRSSessionID();
+// Set the path breadcrumns
 foreach (explode('/', $root) as $key => $items) {
 	$tempArray[] = $items;
 	if ($item == '' and $key == 0) {
-		$currentPathArray[] = '<a href="home.php">Repository</a>';
+		$currentPathArray[] = '<a href="repository.php">Repository</a>';
 	} else {
-		$currentPathArray[] = '<a href="home.php?root=' . implode("/", $tempArray) . '">' . ucfirst($items) . '</a>';
+		$currentPathArray[] = '<a href="repository.php?root=' . implode("/", $tempArray) . '">' . ucfirst($items) . '</a>';
 	}
 }
 $currentPath = implode(" &raquo; ", $currentPathArray);
 
-try 
-{		    
-	$resources = $WSRest->get('resources' . $root);
-	//$response = $pest->post('login', $restData);
-	
-	//$screen .= "\n" . print_r($WSRest->last_response, true);
-	$screen = '<ul>';
-	foreach ($resources->resourceDescriptor as $contents) {
-		switch ($contents['wsType']) {
+// list contents
+foreach ($repository as $resourceDescriptor) {
+        // select proper icon and link for each resource type
+		switch ( $resourceDescriptor->getWsType() ) {
 			case 'folder':
-				$screen .= '<li> <img src="'. WWW_ROOT .'images/icon-folder.png" align="absmiddle" ><a href="home.php?root=' . $contents['uriString'] . '">' . $contents->label . '</a></li>';
+				$screen .= '<li> <img src="'. WWW_ROOT .'images/icon-folder.png" align="absmiddle" >
+				    <a href="repository.php?root=' . $resourceDescriptor->getUriString() . '" 
+				    title="' .  addslashes($resourceDescriptor) . '">' . $resourceDescriptor->getLabel() . '</a></li>';
 			break;
 			case 'reportUnit';
-				$screen .= '<li> <img src="'. WWW_ROOT .'images/icon-edit.gif" align="absmiddle" ><a href="viewReport.php?uri=' . $contents['uriString'] . '">' . $contents->label . '</a></li>';
+				$screen .= '<li> <img src="'. WWW_ROOT .'images/icon-edit.gif" align="absmiddle" >
+				    <a href="viewReport.php?uri=' . $resourceDescriptor->getUriString()  . '" 
+				    title="' . addslashes($resourceDescriptor) . '">' . $resourceDescriptor->getLabel() . '</a></li>';
+				    $report_options = $client->getReportOptions($resourceDescriptor->getUriString());
+                            
+                        foreach($report_options as $ro) {
+                           // echo $ro->getLabel() . "<br />";
+                        }   
+				    
 			break;
 			default:
-				$screen .= '<li>' . $contents->label . ' (' . $contents['wsType'] . ')</li>';
+				$screen .= '<li>' . $resourceDescriptor->getLabel() . ' (' . $resourceDescriptor->getWsType() . ')</li>';
 		}
 	    
-	}
-	$screen .= '</ul>';
-} 
-catch (Pest_Unauthorized $e) {
-	// Check for a 401 (login timed out)	
-	$WSRest->curl_opts[CURLOPT_HEADER] = true;
-	$restData = array(
-	  'j_username' => $_SESSION['username'],
-	  'j_password' => $_SESSION['password']
-	);
-	
-    try {		    
-		$body = $WSRest->post('login', $restData);
-		$response = $WSRest->last_response;
-		if ($response['meta']['http_code'] == '200') {
-			// Respose code 200 -> All OK
-			// Extract the Cookie for further requests.
-			preg_match('/^Set-Cookie: (.*?)$/sm', $body, $cookie);
-			//Cookie: $Version=0; JSESSIONID=52E79BCEE51381DF32637EC69AD698AE; $Path=/jasperserver
-			$_SESSION["JSCookie"] = '$Version=0; ' . str_replace('Path', '$Path', $cookie[1]);
-			// Reload this page.
-	        header("location: home.php");
-	        exit();
-		} else {
-			header("location: logout.php");
-			exit();
-		}
-	} 
-	catch (Exception $e) {
-	   	header("location: logout.php");
-		exit();
-	}
 }
-catch (Exception $e) 
-{
-    $screen .=  "Exception: <pre>" .  $e->getMessage() . "</pre>";
-}
+$screen .= '</ul>';
+ 
+
 
 //$screen .= htmlentities(print_r($resources, true));
 ?>
@@ -141,7 +140,7 @@ catch (Exception $e)
 			<ul class="tabs">
 			<?php echo $_PageTabs; ?>
 			</ul> 
-    		<h3>Welcome to your repository (Using Rest Web Services)</h3>
+    		<h3>Welcome to your Report Repository</h3>
 			<h5><?php echo $currentPath; ?></h5>
 			<?php echo $screen; ?>
    
@@ -149,8 +148,8 @@ catch (Exception $e)
 		<div id="footer" class="span-16"> 
 			<!-- Footer Links -->
 		</div> 
-		<div class="alt span-7 last">
-			<a href="http://www.jaspersoft.com">Jaspersoft.com</a>
+		<div class="alt span-7 last"><p>&nbsp;</p>
+			<a href="http://www.jaspersoft.com">My Reporting Appication</a>
 		</div>
 </div>
     </body>

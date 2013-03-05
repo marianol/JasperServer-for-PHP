@@ -4,22 +4,24 @@
  * 
  *
  *
- * @copyright Copyright (c) 2011
  * @author Mariano Luna
- * 
-LICENSE AND COPYRIGHT NOTIFICATION
-==================================
+ * @copyright Copyright (c) 2011 
+ Unless you have purchased a commercial license agreement from Jaspersoft,
+ the following license terms apply:
 
-The Proof of Concept deliverable(s) are (c) 2011 Jaspersoft Corporation - All rights reserved. 
-Jaspersoft grants to you a non-exclusive, non-transferable, royalty-free license to use the deliverable(s) pursuant to 
-the applicable evaluation license agreement (or, if you later purchase a subscription, the applicable subscription 
-agreement) relating to the Jaspersoft software product at issue. 
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as
+ published by the Free Software Foundation, either version 3 of the
+ License, or (at your option) any later version.
 
-The Jaspersoft Sales department provides the Proof of Concept deliverable(s) "AS IS" and WITHOUT A WARRANTY OF ANY KIND. 
-It is not covered by any Jaspersoft Support agreement or included in any Professional Services offering. 
-At the discretion of the head of the Jaspersoft Professional Services team, support, maintenance and enhancements may be 
-available for such deliverable(s) as "Time for Hire": http://www.jaspersoft.com/time-for-hire.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU Affero  General Public License for more details.
 
+ You should have received a copy of the GNU Affero General Public  License
+ along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 require_once('config.php');
@@ -30,76 +32,106 @@ if($_SESSION['userlevel'] < USER) {
 	exit();
 } 
 
-$reportUnit = (isset($_GET['uri'])) ? htmlentities($_GET['uri']) : false;
-
-$_PageTitle = 'Welcome ' . $_SESSION["username"] ; 
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $sentControls = array();
+    foreach ($_POST as $key => $value) {
+        switch ($key) {
+            case 'uri':
+                $reportUnit = htmlentities($value);
+                break;
+            case 'name':
+                $currentReportName = htmlentities($value);
+                break;
+            case 'format':
+                $format = htmlentities($value);
+                break;            
+            default:
+                $sentControls[$key][] = $value;
+                break;
+        }
+    }
+} else {
+    // First call process the GET report URI
+    $reportUnit = (isset($_GET['uri'])) ? htmlentities($_GET['uri']) : false;
+    $currentReportName = '';
+    $format = 'html';
+}
+$screen = '';
+$_PageTitle = 'Report Viewer' ; 
 $tabArray =  array();
 $tabArray[99] = '<a href="#" class="active">Logged as: ' . $_SESSION["username"] . '</a>';
 $_PageTabs = decoratePageTabs($tabArray, 99);
 
+$client = new Jasper\JasperClient(
+    JRS_HOST, // Hostname
+    JRS_PORT, // Port
+    $_SESSION['username'], // Username
+    $_SESSION['password'], // Password
+    JRS_BASE, // Base URL
+    $_SESSION['org'] // Organization 
+);
 
-$WSRest = new PestXML(JS_WS_URL);
-// Set auth Header
-$WSRest->curl_opts[CURLOPT_COOKIE] = $_SESSION["JSCookie"] ;
+// Input Contols
+$input_control_info = $client->getReportInputControlStructure($reportUnit);
 
-try 
-{		    
-	$resource = $WSRest->get('resource' . $reportUnit);
+$icRender = array();
+$inputControlsDisplay = '';
+$controls = array();
+foreach($input_control_info as $ic) {
+    // build html render  
+    $overrideICs = isset($sentControls[$ic->getId()])? $sentControls[$ic->getId()] : array();
+    switch ($ic->getType()) {
+        case 'singleSelect':
+            // render combo Box
+            $icRender[$ic->getId()] =  makeComboArray($ic->getID(), $ic->inputOptions->getOptions(), $overrideICs );
+            // set control defaults
+            $defaultControls[$ic->getId()] = $ic->inputOptions->getSelected();           
+            break;
+        case 'multiSelect':
+            // render combo Box
+            $icRender[$ic->getId()] =  makeComboArray($ic->getID(), $ic->inputOptions->getOptions(), $overrideICs,'',' multiple ' );
+            // set control defaults
+            $defaultControls[$ic->getId()] = $ic->inputOptions->getSelected();           
+            break;        
+        default:
+            // Render general Input box
+            $inputType = ($ic->visible) ? 'text' : 'hidden';
+            $icRender[$ic->getId()] = '<input type="'. $inputType . '" name="'. $ic->getID() . '" value="' . $ic->inputOptions->getValue() . '">';
+            // set control defaults
+            $defaultControls[$ic->getId()] = $ic->inputOptions->getValue();            
+            break;
+    }    
+    $inputControlsDisplay .= '<br /><strong>' . $ic->getLabel(). '</strong>: ';
+    $inputControlsDisplay .= ($ic->mandatory) ? '(*) ' : ' ';
+    $inputControlsDisplay .= $icRender[$ic->getId()] ;
+    $inputControlsDisplay .= ' - IC Type: ' . $ic->getType();
+}   
 
-	$currentReport = $reportName = $resource['name'];
-	foreach ($resource->resourceDescriptor as $contents) {
-		switch ($contents['wsType']) {
-			case 'datasource':
-				// Get the Datasource to be able to query the input controls if any.
-				$dsUri = $contents->resourceProperty->value;
-				//$screen .= "<hr> <strong>DS URI: </strong>" . $dsUri . "";
-			break;	
-			case 'inputControl':
-				// Render Input Control
-				$screen .= RenderInputControl($contents, $dsUri);
-			break;
-			default:
-				//$screen .= "<hr><pre>" . htmlentities(print_r($contents, true)) . "</pre>";	
-		}
-	}
-	$screen .= "<div style='display:none'> <hr> DEBUG - Full Response: <pre>" . htmlentities(print_r($resource->asXML(), true)) . "</pre> </div>";
-} 
-catch (Pest_Unauthorized $e) {
-	// Check for a 401 (login timed out)	
-	$WSRest->curl_opts[CURLOPT_HEADER] = true;
-	$restData = array(
-	  'j_username' => $_SESSION['username'],
-	  'j_password' => $_SESSION['password']
-	);
-	
-    try {		    
-		$body = $WSRest->post('login', $restData);
-		$response = $WSRest->last_response;
-		if ($response['meta']['http_code'] == '200') {
-			// Respose code 200 -> All OK
-			// Extract the Cookie for further requests.
-			preg_match('/^Set-Cookie: (.*?)$/sm', $body, $cookie);
-			//Cookie: $Version=0; JSESSIONID=52E79BCEE51381DF32637EC69AD698AE; $Path=/jasperserver
-			$_SESSION["JSCookie"] = '$Version=0; ' . str_replace('Path', '$Path', $cookie[1]);
-			// Reload this page.
-	        header("location: home.php");
-	        exit();
-		} else {
-			header("location: logout.php");
-			exit();
-		}
-	} 
-	catch (Exception $e) {
-	   	header("location: logout.php");
-		exit();
-	}
+
+// $controls = array(
+   // 'Country_multi_select' => array('USA', 'Mexico'),
+   // 'Cascading_state_multi_select' => array('CA', 'OR')
+   // );
+// Set report input control send submitted ones or default values
+$controls = isset($sentControls)? $sentControls : $defaultControls;
+// Get report
+$report = $client->runReport($reportUnit, $format, null, $controls);
+
+if ($format == 'html') {
+    $screen .= $report;       
+} else {
+    header('Cache-Control: must-revalidate');
+    header('Pragma: public');
+    header('Content-Description: File Transfer');
+    header('Content-Disposition: attachment; filename=report.' . $format );
+    header('Content-Transfer-Encoding: binary');
+    header('Content-Length: ' . strlen($report));
+    header('Content-Type: application/' . $format);
+    
+    echo $report;       
+    die();
 }
-catch (Exception $e) 
-{
-    $screen .=  "Exception: <pre>" .  $e->getMessage() . "</pre>";
-}
-//$currentReport = '';
-//$screen .= htmlentities(print_r($resources, true));
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
@@ -144,28 +176,29 @@ catch (Exception $e)
 			<ul class="tabs">
 			<?php echo $_PageTabs; ?>
 			</ul> 
-			<h3><?php echo $currentReport; ?></h3>
-			<form action="executeReport.php" method="POST">
+			<h3><?php echo $currentReportName; ?></h3>
+			<form action="viewReport.php" method="POST">
      			<input type="hidden" name="uri" value="<?php echo $reportUnit ?>">
-     			<input type="hidden" name="name" value="<?php echo $currentReport ?>">
+     			<input type="hidden" name="name" value="<?php echo $currentReportName ?>">
 			     Export format: <select name="format">
 			         
-			         <option value="HTML">HTML</option>
-			         <option value="PDF">PDF</option>
-			         <option value="XLS">XLS</option>
-			         <option value="SWF">SWF</option>
+			         <option value="html">HTML</option>
+			         <option value="pdf">PDF</option>
+			         <option value="xls">XLS</option>
+			         <option value="swf">SWF</option>
 			     </select>
-			     
-			     <?php echo $screen; ?>
-			     
+			     <?php echo $inputControlsDisplay; ?>
+			    <br />			     
 			     <input type="submit" value="Run the report">
    			</form>
+   			<hr />
+   			<?php echo $screen; ?>
 		</div>
 		<div id="footer" class="span-16"> 
 			<!-- Footer Links -->
 		</div> 
-		<div class="alt span-7 last">
-			<a href="http://www.jaspersoft.com">Jaspersoft.com</a>
+		<div class="alt span-7 last"><p>&nbsp;</p>
+			<a href="http://www.jaspersoft.com">My Reporting Appication</a>
 		</div>
 </div>
     </body>
