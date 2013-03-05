@@ -119,7 +119,7 @@ All the external libraries are included in this sample, check each library folde
 LICENSE AND COPYRIGHT NOTIFICATION
 ==================================
 
- Copyright (C) 2005 - 2012 All rights reserved.
+ Copyright (C) 2005 - 2012 Jaspersoft Corporation - All rights reserved. 
 
  Unless you have purchased a commercial license agreement from Jaspersoft,
  the following license terms apply:
