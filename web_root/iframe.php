@@ -58,6 +58,8 @@ $tabArray['home'] = '<a href="iframe.php" class="active">Home</a>';
 $tabArray['library'] = '<a href="iframe.php?action=library" class="active">Report Library</a>';
 $tabArray['dashboard'] = '<a href="iframe.php?action=dashboard" class="active">Dashboard</a>';
 $tabArray['report'] =  '<a href="iframe.php?action=report" class="active">Foodmart Report</a>';
+$tabArray['report2'] =  '<a href="iframe.php?action=report2" class="active">Account Report</a>';
+
 $tabArray['adHoc'] =  '<a href="iframe.php?action=adHoc" class="active">Create Ad Hoc Report</a>';
 $tabArray['repository'] = '<a href="iframe.php?action=repository" class="active">Repository View</a>';
 $tabArray['analisys'] =  '<a href="iframe.php?action=analisys" class="active">Analisys View</a>';
@@ -81,6 +83,9 @@ switch ($myPath) {
 		break;
     case 'report':
         $iFramePath = "flow.html?_flowId=viewReportFlow&standAlone=true&_flowId=viewReportFlow&reportUnit=%2Fpublic%2FSamples%2FReports%2FCascading_Report_2_Updated";
+    break;
+    case 'report2':
+        $iFramePath = "flow.html?_flowId=viewReportFlow&standAlone=true&_flowId=viewReportFlow&reportUnit=%2Fpublic%2Fsandbox%2FDemos%2FEmployeeAccounts";
     break;
 	case 'dashboard':
 		$iFramePath = "flow.html?_flowId=dashboardRuntimeFlow&dashboardResource=%2Fpublic%2FSamples%2FDashboards%2F3__Supermart_Dashboard"; //public%2FSamples%2FDashboards%2FSupermartDashboard";
