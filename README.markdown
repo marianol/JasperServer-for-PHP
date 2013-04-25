@@ -6,7 +6,7 @@ Code: http://github.com/marianol/JasperServer-for-PHP/
 
 Author: Mariano Luna
 
-Version: 2.0
+Version: 2.0.1
 
 Requirements
 ------------
@@ -15,7 +15,8 @@ Requirements
 * JasperServer 4.7 or better installed in the same domian. (Tested with v 5.0.1)
 * The PEAR package manager (http://pear.php.net)
   * XML_Serializer PEAR package (http://pear.php.net/manual/en/package.xml.xml-serializer.php) 
-* Embed theme installed on JasperServer (included in "./resources/JS-embed-theme") for version 4.7+ use embed-4.7.zip 
+* Embed theme installed on JasperServer (included in "./JasperServer Resources/JS-embed-theme") for version 4.7+ use embed-4.7.zip 
+* For the interactive account report (writeback sample) you will need to import ./JasperServer Resources/AccountEditReport-JRSExport.zip into your JRS repository
 
 Using thiis Sample
 ------------------
