@@ -52,7 +52,7 @@ Inside that folder you will find  2 folders:
 1) Configure your Apache web server to add an alias to the Application web-root folder. 
 We will make an alias to our application web root folder, this will put our application in:
 
-http://<your-server-IP>/myphpapp 
+	http://<your-server-IP>/myphpapp 
 
 Find the httpd.conf (apache configuration file) and add the following:
 
